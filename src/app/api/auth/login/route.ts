@@ -15,20 +15,21 @@ export async function POST(request: Request) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
   const returnTo = safeReturnTo(formData.get("returnTo"));
-  const loginUrl = new URL("/login", request.url);
+  const loginUrl = new URL(returnTo.startsWith("/admin") ? "/admin/login" : "/login", request.url);
   loginUrl.searchParams.set("returnTo", returnTo);
 
   if (!hasSupabaseEnv()) {
     const adminEmail = (process.env.ADMIN_EMAIL ?? "adm@cotarush.local").toLowerCase();
     const adminPassword = process.env.ADMIN_PASSWORD ?? "CotaRush@2026";
 
-    if (email !== adminEmail || password !== adminPassword) {
+    if (returnTo.startsWith("/admin") && (email !== adminEmail || password !== adminPassword)) {
       loginUrl.searchParams.set("error", "invalid");
       return NextResponse.redirect(loginUrl);
     }
 
-    const response = NextResponse.redirect(new URL(returnTo.startsWith("/admin") ? returnTo : "/admin", request.url));
-    response.cookies.set("cotarush_demo_role", "admin", {
+    const isAdminLogin = returnTo.startsWith("/admin");
+    const response = NextResponse.redirect(new URL(isAdminLogin ? returnTo : returnTo, request.url));
+    response.cookies.set("cotarush_demo_role", isAdminLogin ? "admin" : "participant", {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
