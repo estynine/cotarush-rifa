@@ -20,7 +20,7 @@ export function PublicShell({
       <header className="sticky top-0 z-40 border-b border-white/10 bg-black/65 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Logo />
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Principal">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Principal">
             {navItems.map((item) => (
               <Link key={item.href} className="nav-link" href={item.href}>
                 {item.label}
@@ -34,7 +34,7 @@ export function PublicShell({
             <Link className="btn-primary" href="/campanhas">
               Comprar agora
             </Link>
-            <button className="icon-button md:hidden" aria-label="Abrir menu">
+            <button className="icon-button lg:hidden" aria-label="Abrir menu">
               <Menu size={20} />
             </button>
           </div>
