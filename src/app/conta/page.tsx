@@ -1,0 +1,34 @@
+import Link from "next/link";
+import { PublicShell } from "@/components/shell";
+import { demoProfiles, demoSocialLinks } from "@/lib/demo-data";
+
+export default function AccountPage() {
+  const profile = demoProfiles[0];
+  return (
+    <PublicShell socialLinks={demoSocialLinks}>
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-black text-white">Minha conta</h1>
+        <div className="mt-6 grid gap-5 lg:grid-cols-[320px_1fr]">
+          <aside className="panel p-5">
+            <p className="text-xl font-black text-white">{profile.publicName}</p>
+            <p className="mt-1 text-sm text-zinc-400">{profile.email}</p>
+            <div className="mt-5 grid gap-2">
+              <Link className="btn-secondary" href="/conta/compras">Pedidos</Link>
+              <Link className="btn-secondary" href="/conta/numeros">Meus numeros</Link>
+              <Link className="btn-secondary" href="/conta/premiacoes">Premiacoes</Link>
+            </div>
+          </aside>
+          <section className="panel p-5">
+            <h2 className="text-xl font-black text-white">Perfil</h2>
+            <form className="mt-4 grid gap-3 md:grid-cols-2">
+              <input className="form-input" defaultValue={profile.fullName} aria-label="Nome completo" />
+              <input className="form-input" defaultValue={profile.publicName} aria-label="Nome publico" />
+              <input className="form-input" defaultValue={profile.phone} aria-label="Telefone" />
+              <button className="btn-primary" type="button">Salvar perfil</button>
+            </form>
+          </section>
+        </div>
+      </section>
+    </PublicShell>
+  );
+}
