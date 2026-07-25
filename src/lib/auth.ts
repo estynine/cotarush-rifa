@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { hasSupabaseEnv, getServerSupabase } from "./supabase";
+import { canAccessAdmin } from "./authorization";
 
 export type AuthUser = {
   id: string;
@@ -59,7 +60,7 @@ export async function requireUser(): Promise<AuthUser> {
 
 export async function requireAdmin(): Promise<AuthUser> {
   const user = await requireUser();
-  if (user.role !== "admin" && user.role !== "super_admin") {
+  if (!canAccessAdmin(user)) {
     throw new Error("ADMIN_REQUIRED");
   }
   return user;
