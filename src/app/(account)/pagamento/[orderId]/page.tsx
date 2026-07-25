@@ -1,9 +1,14 @@
 import { PixPaymentCard } from "@/components/account/payment";
+import { ResumePurchase } from "@/components/account/resume-purchase";
 
 const demoPixExpiresAt = "2026-07-25T19:30:00.000Z";
 
 export default async function PaymentPage({ params }: Readonly<{ params: Promise<{ orderId: string }> }>) {
   const { orderId } = await params;
+
+  if (orderId === "retomar") {
+    return <ResumePurchase />;
+  }
 
   return (
     <>
