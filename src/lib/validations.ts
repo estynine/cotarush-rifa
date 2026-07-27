@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { normalizePhone } from "./format";
+import { MAX_ORDER_QUANTITY, normalizePhone } from "./format";
 
 export const passwordSchema = z
   .string()
@@ -35,12 +35,12 @@ export const quantitySchema = z.object({
     .number()
     .int()
     .positive()
-    .max(10000, "O limite padrao por pedido e 10.000 cotas."),
+    .max(MAX_ORDER_QUANTITY, "O limite padrao por pedido e 10.000 cotas."),
 });
 
 export const createOrderSchema = z.object({
   campaignId: z.uuid(),
-  quantity: z.coerce.number().int().positive(),
+  quantity: z.coerce.number().int().positive().max(MAX_ORDER_QUANTITY, "O limite por pedido e 10.000 cotas."),
   pendingPurchaseToken: z.string().optional(),
 });
 
@@ -66,11 +66,15 @@ export const campaignSchema = z.object({
 });
 
 export function validateQuantityAgainstCampaign(quantity: number, maxPerOrder: number): void {
-  if (!Number.isInteger(quantity) || quantity <= 0) {
+  if (!Number.isSafeInteger(quantity) || quantity <= 0) {
     throw new RangeError("Quantidade invalida.");
   }
 
-  if (quantity > maxPerOrder) {
-    throw new RangeError(`Quantidade maxima por pedido: ${maxPerOrder}.`);
+  if (!Number.isSafeInteger(maxPerOrder) || maxPerOrder <= 0 || maxPerOrder > MAX_ORDER_QUANTITY) {
+    throw new RangeError("Limite da campanha invalido.");
+  }
+
+  if (quantity > maxPerOrder || quantity > MAX_ORDER_QUANTITY) {
+    throw new RangeError(`Quantidade maxima por pedido: ${Math.min(maxPerOrder, MAX_ORDER_QUANTITY)}.`);
   }
 }

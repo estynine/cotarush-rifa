@@ -28,6 +28,63 @@ describe("distribuicao de cotas", () => {
     expect(result.allocations.some((item) => [1, 2, 3].includes(item.number))).toBe(false);
   });
 
+  it("bloqueia quantidade e total de campanha invalidos", () => {
+    expect(() =>
+      allocateRandomNumbers({
+        campaignId,
+        participantId,
+        orderId: "order-invalid",
+        quantity: 10001,
+        totalNumbers: 20000,
+        existingNumbers: new Set(),
+        instantPrizes: [],
+      }),
+    ).toThrow("Quantidade fora do intervalo permitido");
+
+    expect(() =>
+      allocateRandomNumbers({
+        campaignId,
+        participantId,
+        orderId: "order-invalid-total",
+        quantity: 1,
+        totalNumbers: 1000001,
+        existingNumbers: new Set(),
+        instantPrizes: [],
+      }),
+    ).toThrow("Total de cotas da campanha invalido");
+  });
+
+  it("bloqueia numeros existentes fora do intervalo da campanha", () => {
+    expect(() =>
+      allocateRandomNumbers({
+        campaignId,
+        participantId,
+        orderId: "order-range",
+        quantity: 1,
+        totalNumbers: 1000,
+        existingNumbers: new Set([1000]),
+        instantPrizes: [],
+      }),
+    ).toThrow("Numero fora do intervalo da campanha");
+  });
+
+  it("bloqueia numero premiado duplicado na campanha", () => {
+    expect(() =>
+      allocateRandomNumbers({
+        campaignId,
+        participantId,
+        orderId: "order-prize-duplicate",
+        quantity: 1,
+        totalNumbers: 1000,
+        existingNumbers: new Set(),
+        instantPrizes: [
+          { number: 50, active: true, found: false },
+          { number: 50, active: false, found: false },
+        ],
+      }),
+    ).toThrow("Numero premiado duplicado");
+  });
+
   it("simula compras simultaneas sem sobrepor numeros reservados", () => {
     const first = allocateRandomNumbers({
       campaignId,

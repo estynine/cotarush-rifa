@@ -26,8 +26,18 @@ describe("formatacao brasileira", () => {
     expect(formatCurrency(10000)).toBe("R$ 100,00");
   });
 
+  it("bloqueia preco e total invalidos", () => {
+    expect(() => calculateOrderTotal(0, 100)).toThrow("Valor da cota invalido");
+    expect(() => calculateOrderTotal(10.5, 100)).toThrow("Valor da cota invalido");
+    expect(() => calculateOrderTotal(10, 0)).toThrow("Quantidade invalida");
+    expect(() => calculateOrderTotal(10, 10001)).toThrow("Quantidade maxima");
+    expect(() => calculateOrderTotal(Number.MAX_SAFE_INTEGER, 10000)).toThrow("Total do pedido invalido");
+  });
+
   it("valida limite maximo por pedido", () => {
+    expect(() => validateQuantityAgainstCampaign(0, 10000)).toThrow("Quantidade invalida");
     expect(() => validateQuantityAgainstCampaign(10001, 10000)).toThrow("Quantidade maxima");
+    expect(() => validateQuantityAgainstCampaign(10, 10001)).toThrow("Limite da campanha invalido");
     expect(() => validateQuantityAgainstCampaign(10000, 10000)).not.toThrow();
   });
 

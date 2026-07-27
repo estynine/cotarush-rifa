@@ -1,4 +1,12 @@
 export const SAO_PAULO_TIME_ZONE = "America/Sao_Paulo";
+export const MAX_ORDER_QUANTITY = 10000;
+export const MAX_CAMPAIGN_NUMBERS = 1000000;
+
+function assertPositiveInteger(value: number, message: string): void {
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new RangeError(message);
+  }
+}
 
 export function formatNumber(value: number): string {
   if (!Number.isInteger(value) || value < 0 || value > 999999) {
@@ -58,11 +66,19 @@ export function toSaoPauloDateKey(value: string | Date): string {
 }
 
 export function calculateOrderTotal(unitPriceCents: number, quantity: number): number {
-  if (!Number.isInteger(quantity) || quantity <= 0) {
-    throw new RangeError("Quantidade invalida.");
+  assertPositiveInteger(unitPriceCents, "Valor da cota invalido.");
+  assertPositiveInteger(quantity, "Quantidade invalida.");
+
+  if (quantity > MAX_ORDER_QUANTITY) {
+    throw new RangeError(`Quantidade maxima por pedido: ${MAX_ORDER_QUANTITY}.`);
   }
 
-  return unitPriceCents * quantity;
+  const total = unitPriceCents * quantity;
+  if (!Number.isSafeInteger(total) || total <= 0) {
+    throw new RangeError("Total do pedido invalido.");
+  }
+
+  return total;
 }
 
 export function formatPercent(value: number): string {

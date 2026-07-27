@@ -1,5 +1,5 @@
 import type { InstantPrize, NumberAllocation, RankingEntry } from "./types";
-import { toSaoPauloDateKey } from "./format";
+import { MAX_CAMPAIGN_NUMBERS, MAX_ORDER_QUANTITY, toSaoPauloDateKey } from "./format";
 
 export type AllocationInput = {
   campaignId: string;
@@ -28,9 +28,32 @@ export function isNumberAllowedForDistribution(
   return prize.active && !prize.found;
 }
 
+function assertCampaignNumber(value: number, totalNumbers: number): void {
+  if (!Number.isInteger(value) || value < 0 || value >= totalNumbers || value >= MAX_CAMPAIGN_NUMBERS) {
+    throw new RangeError("Numero fora do intervalo da campanha.");
+  }
+}
+
 export function allocateRandomNumbers(input: AllocationInput): AllocationResult {
-  if (input.quantity <= 0 || input.quantity > input.totalNumbers) {
+  if (!Number.isSafeInteger(input.totalNumbers) || input.totalNumbers <= 0 || input.totalNumbers > MAX_CAMPAIGN_NUMBERS) {
+    throw new RangeError("Total de cotas da campanha invalido.");
+  }
+
+  if (!Number.isSafeInteger(input.quantity) || input.quantity <= 0 || input.quantity > input.totalNumbers || input.quantity > MAX_ORDER_QUANTITY) {
     throw new RangeError("Quantidade fora do intervalo permitido.");
+  }
+
+  for (const existingNumber of input.existingNumbers) {
+    assertCampaignNumber(existingNumber, input.totalNumbers);
+  }
+
+  const prizeNumbers = new Set<number>();
+  for (const prize of input.instantPrizes) {
+    assertCampaignNumber(prize.number, input.totalNumbers);
+    if (prizeNumbers.has(prize.number)) {
+      throw new RangeError("Numero premiado duplicado na campanha.");
+    }
+    prizeNumbers.add(prize.number);
   }
 
   const reservedInactive = input.instantPrizes.filter((prize) => !prize.active || prize.found).length;
