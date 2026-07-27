@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from("campaigns")
       .insert({
+        owner_admin_id: admin.ownerAdminId ?? admin.id,
         name: input.name,
         slug: input.slug,
         title: input.title,

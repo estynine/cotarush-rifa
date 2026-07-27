@@ -8,8 +8,6 @@ const accountNavItems = [
   { href: "/campanhas", label: "Campanhas" },
   { href: "/conta/numeros", label: "Meus numeros" },
   { href: "/conta/compras", label: "Minhas compras" },
-  { href: "/conta/premiacoes", label: "Minhas premiacoes" },
-  { href: "/ganhadores", label: "Ganhadores" },
   { href: "/conta/perfil", label: "Minha conta" },
 ];
 

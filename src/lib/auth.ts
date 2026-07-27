@@ -6,6 +6,8 @@ export type AuthUser = {
   id: string;
   email?: string;
   role: "participant" | "admin" | "super_admin";
+  ownerAdminId?: string;
+  adminCode?: string;
 };
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
@@ -18,6 +20,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         id: "99999999-9999-4999-8999-999999999999",
         email: process.env.ADMIN_EMAIL ?? "adm@cotarush.local",
         role,
+        ownerAdminId: "99999999-9999-4999-8999-999999999999",
+        adminCode: "A001",
       };
     }
 
@@ -26,6 +30,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         id: "11111111-1111-4111-8111-111111111111",
         email: "participante@cotarush.local",
         role: "participant",
+        ownerAdminId: "99999999-9999-4999-8999-999999999999",
+        adminCode: cookieStore.get("cotarush_demo_admin_code")?.value ?? "A001",
       };
     }
 
@@ -38,7 +44,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, user_roles(role)")
+    .select("id, owner_admin_id, admin_code, user_roles(role)")
     .eq("id", data.user.id)
     .single();
 
@@ -49,6 +55,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     id: data.user.id,
     email: data.user.email,
     role: role === "admin" || role === "super_admin" ? role : "participant",
+    ownerAdminId: profile?.owner_admin_id ?? undefined,
+    adminCode: profile?.admin_code ?? undefined,
   };
 }
 

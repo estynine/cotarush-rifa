@@ -14,6 +14,11 @@ export const signUpSchema = z
     publicName: z.string().trim().min(2, "Informe seu nome publico."),
     email: z.email("Informe um e-mail valido.").toLowerCase(),
     phone: z.string().transform(normalizePhone).pipe(z.string().min(10).max(13)),
+    adminCode: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .regex(/^[A-Z][0-9]{3}$/, "Codigo do ADM deve ter 1 letra e 3 numeros. Exemplo: A001."),
     password: passwordSchema,
     confirmPassword: z.string(),
     termsAccepted: z.literal(true, "Aceite os Termos de Uso."),

@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   BadgeDollarSign,
   BarChart3,
-  Bell,
   Crown,
   Database,
   Gift,
@@ -11,7 +10,6 @@ import {
   Receipt,
   Settings,
   Shield,
-  Trophy,
   Users,
 } from "lucide-react";
 import type { Campaign, InstantPrize, Order, PrizeAward, Profile } from "@/lib/types";
@@ -25,11 +23,9 @@ const items = [
   { href: "/admin/pagamentos", label: "Pagamentos", icon: BadgeDollarSign },
   { href: "/admin/numeros", label: "Numeros distribuidos", icon: Database },
   { href: "/admin/numeros-premiados", label: "Numeros premiados", icon: Gift },
-  { href: "/admin/premiacoes", label: "Premiacoes", icon: Trophy },
   { href: "/admin/rankings", label: "Menor e maior do dia", icon: Gift },
   { href: "/admin/rankings", label: "Ranking diario", icon: BarChart3 },
   { href: "/admin/rankings", label: "Top 10", icon: Crown },
-  { href: "/admin/ganhadores", label: "Ganhadores", icon: Bell },
   { href: "/admin/configuracoes", label: "Redes sociais", icon: Megaphone },
   { href: "/admin/configuracoes", label: "Suporte", icon: Shield },
   { href: "/admin/configuracoes", label: "Configuracoes", icon: Settings },
@@ -177,7 +173,15 @@ export function OrdersAdminRows({ orders }: Readonly<{ orders: Order[] }>) {
     <AdminDataTable
       rows={orders.map((order) => ({
         id: order.id,
-        cells: [order.readableCode, order.status, order.quantity.toLocaleString("pt-BR"), formatCurrency(order.totalCents), formatDateTime(order.createdAt)],
+        cells: [
+          order.readableCode,
+          order.status,
+          order.quantity.toLocaleString("pt-BR"),
+          formatCurrency(order.totalCents),
+          formatCurrency(order.platformFeeCents),
+          formatCurrency(order.adminNetCents),
+          formatDateTime(order.createdAt),
+        ],
       }))}
     />
   );

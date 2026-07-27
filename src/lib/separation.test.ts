@@ -80,12 +80,12 @@ describe("permissoes server-side", () => {
   it("area do participante filtra dados demo pelo usuario atual", () => {
     const accountOrdersPage = read("src/app/(account)/conta/compras/page.tsx");
     const accountNumbersPage = read("src/app/(account)/conta/numeros/page.tsx");
-    const accountAwardsPage = read("src/app/(account)/conta/premiacoes/page.tsx");
     const orderApi = read("src/app/api/orders/[orderId]/route.ts");
+    const accountAwardsPage = read("src/app/(account)/conta/premiacoes/page.tsx");
 
     expect(accountOrdersPage).toContain("order.participantId === user.id");
     expect(accountNumbersPage).toContain("allocation.participantId === user.id");
-    expect(accountAwardsPage).toContain("award.participantId === user.id");
+    expect(accountAwardsPage).toContain('redirect("/conta/compras")');
     expect(orderApi).toContain("canReadParticipantResource(user, order.participantId)");
   });
 });
@@ -123,13 +123,43 @@ describe("controle de premios instantaneos", () => {
 });
 
 describe("estados vazios", () => {
-  it("paginas de ganhadores avisam quando nao ha ganhadores", () => {
-    const publicWinners = read("src/app/(public)/ganhadores/page.tsx");
-    const adminWinners = read("src/app/admin/(panel)/ganhadores/page.tsx");
+  it("menus publicos e da conta nao exibem ganhadores ou premiacoes", () => {
+    const publicShell = read("src/components/public/shell.tsx");
+    const accountShell = read("src/components/account/shell.tsx");
 
-    expect(publicWinners).toContain("Ainda nao tem ganhadores.");
-    expect(publicWinners).toContain("demoAwards.length === 0");
-    expect(adminWinners).toContain("Ainda nao tem ganhadores.");
-    expect(adminWinners).toContain("demoAwards.length === 0");
+    expect(publicShell).not.toContain("/ganhadores");
+    expect(accountShell).not.toContain("/ganhadores");
+    expect(accountShell).not.toContain("/conta/premiacoes");
+  });
+});
+
+describe("multi adm e split financeiro", () => {
+  it("cadastro exige codigo unico de adm com 1 letra e 3 numeros", () => {
+    const validations = read("src/lib/validations.ts");
+    const signup = read("src/app/api/auth/signup/route.ts");
+    const migration = read("supabase/migrations/20260727170000_admin_tenant_revenue_split.sql");
+
+    expect(validations).toContain("adminCode");
+    expect(validations).toContain("^[A-Z][0-9]{3}$");
+    expect(signup).toContain("admin_invite_codes");
+    expect(signup).toContain("owner_admin_id");
+    expect(migration).toContain("create table public.admin_invite_codes");
+    expect(migration).toContain("code text primary key check (code ~ '^[A-Z][0-9]{3}$')");
+    expect(migration).toContain("profiles scoped read");
+    expect(migration).toContain("admins manage scoped campaigns");
+  });
+
+  it("pedidos registram metade da plataforma e metade do adm", () => {
+    const ordersApi = read("src/app/api/orders/route.ts");
+    const migration = read("supabase/migrations/20260727170000_admin_tenant_revenue_split.sql");
+
+    expect(ordersApi).toContain("calculatePlatformSplit");
+    expect(ordersApi).toContain("platform_fee_cents");
+    expect(ordersApi).toContain("admin_net_cents");
+    expect(migration).toContain("order_revenue_splits");
+    expect(migration).toContain("orders_revenue_split_total");
+    expect(migration).toContain("can_manage_admin_scope");
+    expect(migration).toContain("admins manage scoped allocations");
+    expect(migration).toContain("admins manage scoped instant prizes");
   });
 });

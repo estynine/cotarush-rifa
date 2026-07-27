@@ -8,28 +8,14 @@ export default async function AccountProfilePage() {
   return (
     <section className="px-3 py-6 sm:px-4">
       <h1 className="text-3xl font-black text-white">Perfil</h1>
-      <p className="mt-2 text-sm text-zinc-400">Edite seus dados publicos e telefone de contato.</p>
-      <form className="panel mt-6 grid gap-3 p-5">
-        <label className="grid gap-2 text-sm font-bold text-zinc-300">
-          Nome completo
-          <input className="form-input" defaultValue={profile.fullName} />
-        </label>
-        <label className="grid gap-2 text-sm font-bold text-zinc-300">
-          Nome publico
-          <input className="form-input" defaultValue={profile.publicName} />
-        </label>
-        <label className="grid gap-2 text-sm font-bold text-zinc-300">
-          E-mail
-          <input className="form-input" defaultValue={profile.email} disabled />
-        </label>
-        <label className="grid gap-2 text-sm font-bold text-zinc-300">
-          Telefone
-          <input className="form-input" defaultValue={profile.phone} inputMode="numeric" />
-        </label>
-        <button className="btn-primary" type="button">
-          Salvar perfil
-        </button>
-      </form>
+      <p className="mt-2 text-sm text-zinc-400">Dados cadastrados na sua conta.</p>
+      <div className="panel mt-6 grid gap-3 p-5 text-sm text-zinc-300">
+        <p><strong className="text-white">Nome completo:</strong> {profile.fullName}</p>
+        <p><strong className="text-white">Nome publico:</strong> {profile.publicName}</p>
+        <p><strong className="text-white">E-mail:</strong> {profile.email}</p>
+        <p><strong className="text-white">Telefone:</strong> {profile.phone}</p>
+        <p><strong className="text-white">Codigo do ADM:</strong> {profile.inviteCode ?? "A001"}</p>
+      </div>
     </section>
   );
 }

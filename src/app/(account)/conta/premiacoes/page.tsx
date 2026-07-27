@@ -1,19 +1,5 @@
-import { AwardsList } from "@/components/account/account";
-import { demoAwards } from "@/lib/demo-data";
-import { requireUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function AccountAwardsPage() {
-  const user = await requireUser();
-  const awards = demoAwards.filter((award) => award.participantId === user.id);
-
-  return (
-    <>
-      <section className="px-3 py-6 sm:px-4">
-        <h1 className="text-3xl font-black text-white">Minhas premiacoes</h1>
-        <div className="mt-6">
-          <AwardsList awards={awards} />
-        </div>
-      </section>
-    </>
-  );
+  redirect("/conta/compras");
 }

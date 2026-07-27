@@ -6,32 +6,51 @@ import type { NumberAllocation, Order, PrizeAward } from "@/lib/types";
 import { formatCurrency, formatDate, formatDateTime, formatNumber } from "@/lib/format";
 
 export function OrdersTable({ orders }: Readonly<{ orders: Order[] }>) {
+  const totalSpentCents = orders.reduce((sum, order) => sum + order.totalCents, 0);
+  const totalNumbers = orders.reduce((sum, order) => sum + order.quantity, 0);
+
   return (
-    <div className="table-wrap">
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Cotas</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Criado em</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.readableCode}</td>
-              <td>{order.quantity.toLocaleString("pt-BR")}</td>
-              <td>{formatCurrency(order.totalCents)}</td>
-              <td>
-                <span className="status-pill">{order.status}</span>
-              </td>
-              <td>{formatDateTime(order.createdAt)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid gap-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="panel p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Total gasto</p>
+          <p className="mt-2 text-2xl font-black text-white">{formatCurrency(totalSpentCents)}</p>
+        </div>
+        <div className="panel p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Cotas compradas</p>
+          <p className="mt-2 text-2xl font-black text-white">{totalNumbers.toLocaleString("pt-BR")}</p>
+        </div>
+      </div>
+      {orders.length === 0 ? (
+        <p className="empty-state">Voce ainda nao fez pedidos.</p>
+      ) : (
+        <div className="table-wrap">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cotas</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Criado em</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.readableCode}</td>
+                  <td>{order.quantity.toLocaleString("pt-BR")}</td>
+                  <td>{formatCurrency(order.totalCents)}</td>
+                  <td>
+                    <span className="status-pill">{order.status}</span>
+                  </td>
+                  <td>{formatDateTime(order.createdAt)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
@@ -68,29 +87,33 @@ export function MyNumbersGrid({ allocations }: Readonly<{ allocations: NumberAll
       </label>
       <p className="mt-3 text-sm text-zinc-500">Exibindo no maximo 300 itens por vez para manter a tela rapida.</p>
       <div className="mt-6 grid gap-6">
-        {Object.entries(groups).map(([date, numbers]) => (
-          <section key={date} className="panel p-4">
-            <h2 className="font-black text-white">
-              {date} - {numbers.length.toLocaleString("pt-BR")} numeros
-            </h2>
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {numbers.map((allocation) => (
-                <span
-                  key={allocation.id}
-                  className={
-                    allocation.status === "invalidated"
-                      ? "number-chip number-invalid"
-                      : allocation.awarded
-                        ? "number-chip number-awarded"
-                        : "number-chip"
-                  }
-                >
-                  {formatNumber(allocation.number)}
-                </span>
-              ))}
-            </div>
-          </section>
-        ))}
+        {filtered.length === 0 ? (
+          <p className="empty-state">Voce ainda nao possui numeros.</p>
+        ) : (
+          Object.entries(groups).map(([date, numbers]) => (
+            <section key={date} className="panel p-4">
+              <h2 className="font-black text-white">
+                {date} - {numbers.length.toLocaleString("pt-BR")} numeros
+              </h2>
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {numbers.map((allocation) => (
+                  <span
+                    key={allocation.id}
+                    className={
+                      allocation.status === "invalidated"
+                        ? "number-chip number-invalid"
+                        : allocation.awarded
+                          ? "number-chip number-awarded"
+                          : "number-chip"
+                    }
+                  >
+                    {formatNumber(allocation.number)}
+                  </span>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
       </div>
     </div>
   );

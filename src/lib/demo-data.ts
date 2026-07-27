@@ -1,4 +1,5 @@
 import type {
+  AdminTenant,
   Campaign,
   DailyExtremes,
   InstantPrize,
@@ -9,6 +10,21 @@ import type {
   RankingEntry,
   SocialLinks,
 } from "./types";
+
+export const demoAdminTenants: AdminTenant[] = [
+  {
+    id: "99999999-9999-4999-8999-999999999999",
+    publicName: "Operacao",
+    inviteCode: "A001",
+    paymentAccountLabel: "Conta ADM Operacao",
+  },
+  {
+    id: "88888888-8888-4888-8888-888888888888",
+    publicName: "Joao",
+    inviteCode: "J123",
+    paymentAccountLabel: "Conta ADM Joao",
+  },
+];
 
 export const demoSocialLinks: SocialLinks = {
   whatsappGroup: "https://wa.me/5500000000000",
@@ -21,6 +37,8 @@ export const demoSocialLinks: SocialLinks = {
 export const demoProfiles: Profile[] = [
   {
     id: "11111111-1111-4111-8111-111111111111",
+    ownerAdminId: demoAdminTenants[0].id,
+    inviteCode: demoAdminTenants[0].inviteCode,
     fullName: "Marcos Silva",
     publicName: "Marcos",
     email: "marcos@example.com",
@@ -30,6 +48,8 @@ export const demoProfiles: Profile[] = [
   },
   {
     id: "22222222-2222-4222-8222-222222222222",
+    ownerAdminId: demoAdminTenants[0].id,
+    inviteCode: demoAdminTenants[0].inviteCode,
     fullName: "Ana Souza",
     publicName: "Ana Turbo",
     email: "ana@example.com",
@@ -39,10 +59,21 @@ export const demoProfiles: Profile[] = [
   },
   {
     id: "99999999-9999-4999-8999-999999999999",
+    inviteCode: demoAdminTenants[0].inviteCode,
     fullName: "Admin CotaRush",
     publicName: "Operacao",
     email: "admin@cotarush.local",
     phone: "11900000000",
+    role: "admin",
+    blocked: false,
+  },
+  {
+    id: "88888888-8888-4888-8888-888888888888",
+    inviteCode: demoAdminTenants[1].inviteCode,
+    fullName: "Joao Administrador",
+    publicName: "Joao",
+    email: "joao@cotarush.local",
+    phone: "11911110000",
     role: "admin",
     blocked: false,
   },
@@ -51,6 +82,7 @@ export const demoProfiles: Profile[] = [
 export const demoCampaigns: Campaign[] = [
   {
     id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    ownerAdminId: demoAdminTenants[0].id,
     slug: "setup-gamer-dos-sonhos",
     name: "Setup Gamer dos Sonhos",
     title: "Setup Gamer dos Sonhos",
@@ -169,12 +201,15 @@ export const demoInstantPrizes: InstantPrize[] = [
 export const demoOrders: Order[] = [
   {
     id: "order-demo-1",
+    ownerAdminId: demoAdminTenants[0].id,
     readableCode: "CR-20260725-0001",
     campaignId: demoCampaigns[0].id,
     participantId: demoProfiles[0].id,
     quantity: 1000,
     unitPriceCents: 10,
     totalCents: 10000,
+    platformFeeCents: 5000,
+    adminNetCents: 5000,
     status: "approved",
     createdAt: "2026-07-25T13:10:00.000Z",
     approvedAt: "2026-07-25T13:20:00.000Z",
@@ -182,12 +217,15 @@ export const demoOrders: Order[] = [
   },
   {
     id: "order-demo-2",
+    ownerAdminId: demoAdminTenants[0].id,
     readableCode: "CR-20260725-0002",
     campaignId: demoCampaigns[0].id,
     participantId: demoProfiles[1].id,
     quantity: 2500,
     unitPriceCents: 10,
     totalCents: 25000,
+    platformFeeCents: 12500,
+    adminNetCents: 12500,
     status: "approved",
     createdAt: "2026-07-25T14:00:00.000Z",
     approvedAt: "2026-07-25T14:04:00.000Z",

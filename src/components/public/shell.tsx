@@ -5,7 +5,6 @@ import type { SocialLinks } from "@/lib/types";
 
 const navItems = [
   { href: "/campanhas", label: "Campanhas" },
-  { href: "/ganhadores", label: "Ganhadores" },
   { href: "/termos", label: "Termos" },
 ];
 

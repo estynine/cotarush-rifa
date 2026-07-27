@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { AdminTitle, CampaignAdminRows, ConfirmActionDialog } from "@/components/admin/admin";
 import { demoCampaigns } from "@/lib/demo-data";
+import { requireAdmin } from "@/lib/auth";
 
-export default function AdminCampaignsPage() {
+export default async function AdminCampaignsPage() {
+  const admin = await requireAdmin();
+  const campaigns = demoCampaigns.filter((campaign) => campaign.ownerAdminId === admin.ownerAdminId);
+
   return (
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -12,7 +16,7 @@ export default function AdminCampaignsPage() {
       <div className="mt-6">
         <ConfirmActionDialog />
       </div>
-      <CampaignAdminRows campaigns={demoCampaigns} />
+      <CampaignAdminRows campaigns={campaigns} />
     </>
   );
 }

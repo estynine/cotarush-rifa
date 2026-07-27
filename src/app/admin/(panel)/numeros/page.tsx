@@ -1,8 +1,13 @@
 import { AdminTitle, AdminDataTable } from "@/components/admin/admin";
-import { demoAllocations, demoProfiles } from "@/lib/demo-data";
+import { demoAllocations, demoOrders, demoProfiles } from "@/lib/demo-data";
+import { requireAdmin } from "@/lib/auth";
 import { formatDateTime, formatNumber } from "@/lib/format";
 
-export default function AdminNumbersPage() {
+export default async function AdminNumbersPage() {
+  const admin = await requireAdmin();
+  const orderIds = new Set(demoOrders.filter((order) => order.ownerAdminId === admin.ownerAdminId).map((order) => order.id));
+  const allocations = demoAllocations.filter((allocation) => orderIds.has(allocation.orderId));
+
   return (
     <>
       <AdminTitle title="Numeros distribuidos" description="Consulta administrativa por campanha, proprietario, pedido, origem e estado." />
@@ -11,7 +16,7 @@ export default function AdminNumbersPage() {
         <button className="btn-primary" type="button">Consultar</button>
       </form>
       <AdminDataTable
-        rows={demoAllocations.map((allocation) => ({
+        rows={allocations.map((allocation) => ({
           id: allocation.id,
           cells: [
             formatNumber(allocation.number),

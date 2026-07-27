@@ -33,6 +33,7 @@ export type InstantPrizeReleaseRule = "manual" | "after_percent_sold" | "after_r
 
 export type Campaign = {
   id: string;
+  ownerAdminId: string;
   slug: string;
   name: string;
   title: string;
@@ -64,6 +65,8 @@ export type Campaign = {
 
 export type Profile = {
   id: string;
+  ownerAdminId?: string;
+  inviteCode?: string;
   fullName: string;
   publicName: string;
   email: string;
@@ -74,12 +77,15 @@ export type Profile = {
 
 export type Order = {
   id: string;
+  ownerAdminId: string;
   readableCode: string;
   campaignId: string;
   participantId: string;
   quantity: number;
   unitPriceCents: number;
   totalCents: number;
+  platformFeeCents: number;
+  adminNetCents: number;
   status: PaymentStatus;
   createdAt: string;
   approvedAt?: string;
@@ -158,6 +164,13 @@ export type SocialLinks = {
   instagram?: string;
   tiktok?: string;
   youtube?: string;
+};
+
+export type AdminTenant = {
+  id: string;
+  publicName: string;
+  inviteCode: string;
+  paymentAccountLabel?: string;
 };
 
 export type PixPayment = {
