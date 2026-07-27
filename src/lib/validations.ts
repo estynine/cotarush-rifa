@@ -65,6 +65,55 @@ export const campaignSchema = z.object({
   authorizationNumber: z.string().optional(),
 });
 
+const instantPrizeReleaseRuleSchema = z.enum(["manual", "after_percent_sold", "after_revenue", "sold_out"]);
+
+const instantPrizeControlBaseSchema = z
+  .object({
+    active: z.boolean().optional(),
+    valueCents: z.number().int().nonnegative().nullable().optional(),
+    payoutReserveCents: z.number().int().nonnegative().optional(),
+    releaseRule: instantPrizeReleaseRuleSchema.optional(),
+    releaseThresholdPercent: z.number().min(0).max(100).nullable().optional(),
+    releaseThresholdCents: z.number().int().nonnegative().nullable().optional(),
+    publicRuleLabel: z.string().trim().min(3).max(180).optional(),
+    reason: z.string().trim().min(3).max(400).optional(),
+  })
+  .superRefine((data, context) => {
+    if (data.releaseRule === "manual" || data.releaseRule === "sold_out") {
+      if (data.releaseThresholdPercent != null || data.releaseThresholdCents != null) {
+        context.addIssue({ code: "custom", message: "Esta regra nao aceita gatilho numerico.", path: ["releaseRule"] });
+      }
+    }
+
+    if (data.releaseRule === "after_percent_sold") {
+      if (data.releaseThresholdPercent == null || data.releaseThresholdCents != null) {
+        context.addIssue({ code: "custom", message: "Informe apenas o percentual vendido.", path: ["releaseThresholdPercent"] });
+      }
+    }
+
+    if (data.releaseRule === "after_revenue") {
+      if (data.releaseThresholdCents == null || data.releaseThresholdPercent != null) {
+        context.addIssue({ code: "custom", message: "Informe apenas o caixa em centavos.", path: ["releaseThresholdCents"] });
+      }
+    }
+  });
+
+export const instantPrizeControlSchema = instantPrizeControlBaseSchema
+  .extend({
+    prizeId: z.string().trim().min(1),
+  })
+  .refine(({ active, valueCents, payoutReserveCents, releaseRule, publicRuleLabel }) => active !== undefined || valueCents !== undefined || payoutReserveCents !== undefined || releaseRule !== undefined || publicRuleLabel !== undefined, {
+    message: "Informe pelo menos uma alteracao.",
+  });
+
+export const instantPrizeBatchControlSchema = instantPrizeControlBaseSchema
+  .extend({
+    campaignId: z.uuid(),
+  })
+  .refine(({ active, valueCents, payoutReserveCents, releaseRule, publicRuleLabel }) => active !== undefined || valueCents !== undefined || payoutReserveCents !== undefined || releaseRule !== undefined || publicRuleLabel !== undefined, {
+    message: "Informe pelo menos uma alteracao em lote.",
+  });
+
 export function validateQuantityAgainstCampaign(quantity: number, maxPerOrder: number): void {
   if (!Number.isSafeInteger(quantity) || quantity <= 0) {
     throw new RangeError("Quantidade invalida.");

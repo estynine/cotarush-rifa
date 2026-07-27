@@ -101,3 +101,23 @@ describe("retomada de compra", () => {
     expect(resumePurchase).toContain("fetch(\"/api/orders\"");
   });
 });
+
+describe("controle de premios instantaneos", () => {
+  it("painel admin possui regra de liberacao e bloqueio apos encontrado", () => {
+    const adminComponents = read("src/components/admin/admin.tsx");
+    const prizeControls = read("src/components/admin/instant-prize-controls.tsx");
+    const instantPrizeApi = read("src/app/api/admin/instant-prizes/route.ts");
+    const migration = read("supabase/migrations/20260727134000_instant_prize_release_controls.sql");
+
+    expect(prizeControls).toContain("Controle de liberacao dos premios");
+    expect(prizeControls).toContain("Encontrado e travado");
+    expect(prizeControls).toContain("Acoes em lote");
+    expect(prizeControls).toContain("Regra de caixa");
+    expect(instantPrizeApi).toContain("requireAdmin");
+    expect(instantPrizeApi).toContain("instant_prize.batch_update");
+    expect(adminComponents).toContain("ConfirmActionDialog");
+    expect(migration).toContain("instant_prize_found_locked");
+    expect(migration).toContain("prevent_found_instant_prize_delete_trigger");
+    expect(migration).toContain("instant_prizes_release_controls_valid");
+  });
+});

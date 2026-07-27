@@ -29,6 +29,7 @@ export type PrizeAwardStatus =
   | "cancelled";
 
 export type PrizeType = "money" | "product" | "extra_numbers" | "credit" | "other";
+export type InstantPrizeReleaseRule = "manual" | "after_percent_sold" | "after_revenue" | "sold_out";
 
 export type Campaign = {
   id: string;
@@ -114,6 +115,11 @@ export type InstantPrize = {
   activatedAt?: string;
   foundAt?: string;
   deliveryStatus: PrizeAwardStatus;
+  releaseRule: InstantPrizeReleaseRule;
+  releaseThresholdPercent?: number;
+  releaseThresholdCents?: number;
+  payoutReserveCents: number;
+  publicRuleLabel: string;
 };
 
 export type PrizeAward = {

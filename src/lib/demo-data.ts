@@ -99,6 +99,9 @@ export const demoInstantPrizes: InstantPrize[] = [
     foundOrderId: "order-demo-1",
     foundAt: "2026-07-25T13:20:00.000Z",
     deliveryStatus: "pending",
+    releaseRule: "manual",
+    payoutReserveCents: 5000,
+    publicRuleLabel: "Liberado pela administracao da campanha",
   },
   {
     id: "p1",
@@ -111,6 +114,10 @@ export const demoInstantPrizes: InstantPrize[] = [
     active: true,
     found: false,
     deliveryStatus: "pending",
+    releaseRule: "after_percent_sold",
+    releaseThresholdPercent: 40,
+    payoutReserveCents: 10000,
+    publicRuleLabel: "Disponivel apos a campanha atingir 40% das cotas",
   },
   {
     id: "p2",
@@ -123,6 +130,9 @@ export const demoInstantPrizes: InstantPrize[] = [
     active: false,
     found: false,
     deliveryStatus: "pending",
+    releaseRule: "manual",
+    payoutReserveCents: 0,
+    publicRuleLabel: "Aguardando liberacao da administracao",
   },
   {
     id: "p3",
@@ -134,6 +144,9 @@ export const demoInstantPrizes: InstantPrize[] = [
     active: true,
     found: false,
     deliveryStatus: "pending",
+    releaseRule: "sold_out",
+    payoutReserveCents: 0,
+    publicRuleLabel: "Disponivel somente apos todas as cotas serem vendidas",
   },
   {
     id: "p4",
@@ -146,6 +159,10 @@ export const demoInstantPrizes: InstantPrize[] = [
     active: false,
     found: false,
     deliveryStatus: "pending",
+    releaseRule: "after_revenue",
+    releaseThresholdCents: 250000,
+    payoutReserveCents: 30000,
+    publicRuleLabel: "Disponivel apos reserva de caixa da campanha",
   },
 ];
 
