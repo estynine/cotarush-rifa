@@ -44,6 +44,14 @@ MERCADO_PAGO_WEBHOOK_URL=http://localhost:3000/api/webhooks/mercadopago
 
 Chaves privadas ficam somente no backend. Nunca use `SUPABASE_SERVICE_ROLE_KEY` ou `MERCADO_PAGO_ACCESS_TOKEN` no frontend.
 
+Para producao na Vercel, use o nome de projeto `cotarush` e configure o dominio:
+
+```bash
+NEXT_PUBLIC_APP_URL=https://cotarush.vercel.app
+FRONTEND_ORIGIN=https://cotarush.vercel.app
+MERCADO_PAGO_WEBHOOK_URL=https://cotarush.vercel.app/api/webhooks/mercadopago
+```
+
 ## Supabase
 
 1. Crie um projeto Supabase.
