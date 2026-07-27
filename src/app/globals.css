@@ -242,6 +242,11 @@ button:disabled {
   height: 320px;
 }
 
+.setup-visual.compact {
+  width: min(78vw, 340px);
+  height: 230px;
+}
+
 .setup-visual span {
   position: absolute;
   display: block;

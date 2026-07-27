@@ -69,6 +69,33 @@ export function CampaignHero({ campaign }: Readonly<{ campaign: Campaign }>) {
   );
 }
 
+export function CampaignMobileHero({ campaign }: Readonly<{ campaign: Campaign }>) {
+  return (
+    <article className="panel overflow-hidden">
+      <div className="relative min-h-[260px] overflow-hidden bg-[#111827]">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(34,211,238,0.22),rgba(20,184,166,0.16)),radial-gradient(circle_at_72%_26%,rgba(250,204,21,0.2),transparent_28%)]" />
+        <div className="relative grid min-h-[260px] place-items-center p-5">
+          <div className="setup-visual compact" aria-label={campaign.title}>
+            <span className="monitor" />
+            <span className="tower" />
+            <span className="keyboard" />
+            <span className="mouse" />
+          </div>
+        </div>
+      </div>
+      <div className="p-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1 text-xs font-black uppercase text-cyan-200">
+          <Zap size={14} />
+          Campanha ativa
+        </div>
+        <h1 className="mt-3 text-3xl font-black text-white">{campaign.title}</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-300">{campaign.fullDescription}</p>
+        <CampaignProgress campaign={campaign} />
+      </div>
+    </article>
+  );
+}
+
 function Metric({ label, value, tone }: Readonly<{ label: string; value: string; tone?: "gold" }>) {
   return (
     <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
@@ -98,9 +125,12 @@ export function CampaignProgress({ campaign }: Readonly<{ campaign: Campaign }>)
 
 export function CampaignPurchasePanel({ campaign }: Readonly<{ campaign: Campaign }>) {
   return (
-    <aside className="panel sticky top-24 p-5">
-      <h2 className="text-lg font-black text-white">Escolha suas cotas</h2>
-      <p className="mt-1 text-sm text-zinc-400">O valor final sera recalculado no servidor antes do Pix.</p>
+    <aside className="panel p-4 lg:sticky lg:top-24">
+      <div className="rounded-lg border border-cyan-300/20 bg-cyan-300/[0.07] p-4">
+        <p className="text-xs font-black uppercase text-cyan-200">Valor da cota</p>
+        <p className="mt-1 text-3xl font-black text-white">{formatCurrency(campaign.pricePerNumberCents)}</p>
+      </div>
+      <h2 className="mt-4 text-lg font-black text-white">Escolha suas cotas</h2>
       <QuantitySelector campaign={campaign} />
     </aside>
   );
@@ -145,25 +175,31 @@ function RankingRow({ index, entry }: Readonly<{ index: number; entry: RankingEn
   );
 }
 
-export function DailyNumberExtremes({ extremes, campaign }: Readonly<{ extremes: DailyExtremes; campaign: Campaign }>) {
+export function DailyNumberExtremes({
+  extremes,
+  campaign,
+  compact = false,
+}: Readonly<{ extremes: DailyExtremes; campaign: Campaign; compact?: boolean }>) {
   return (
-    <section className="panel p-5">
+    <section className={compact ? "panel p-3" : "panel p-5"}>
       <SectionTitle icon={Gift} title="Menor e maior do dia" />
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className={compact ? "mt-3 grid grid-cols-2 gap-2" : "mt-4 grid gap-3 sm:grid-cols-2"}>
         <ExtremeCard
-          label="Menor numero do dia"
+          label="Menor numero achado do dia"
           number={extremes.lowestNumber}
           owner={extremes.lowestOwner}
           prize={formatCurrency(campaign.dailyPrize.lowestValueCents)}
+          compact={compact}
         />
         <ExtremeCard
-          label="Maior numero do dia"
+          label="Maior numero achado do dia"
           number={extremes.highestNumber}
           owner={extremes.highestOwner}
           prize={formatCurrency(campaign.dailyPrize.highestValueCents)}
+          compact={compact}
         />
       </div>
-      <p className="mt-4 flex items-center gap-2 text-xs text-zinc-500">
+      <p className={compact ? "mt-3 flex items-center gap-2 text-[0.7rem] text-zinc-500" : "mt-4 flex items-center gap-2 text-xs text-zinc-500"}>
         <CalendarClock size={14} />
         Ultima atualizacao: {extremes.updatedAt ? formatDateTime(extremes.updatedAt) : "aguardando primeiras cotas"}
       </p>
@@ -176,13 +212,18 @@ function ExtremeCard({
   number,
   owner,
   prize,
-}: Readonly<{ label: string; number?: number; owner?: string; prize: string }>) {
+  compact = false,
+}: Readonly<{ label: string; number?: number; owner?: string; prize: string; compact?: boolean }>) {
   return (
-    <div className="rounded-lg border border-amber-200/20 bg-amber-200/[0.06] p-4">
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">{label}</p>
-      <p className="mt-3 font-mono text-3xl font-black text-white">{number === undefined ? "---.---" : formatNumber(number)}</p>
-      <p className="mt-1 text-sm text-zinc-300">{owner ?? "Aguardando participante"}</p>
-      <p className="mt-3 text-sm font-black text-amber-100">Premio: {prize}</p>
+    <div className="rounded-lg border border-amber-200/20 bg-amber-200/[0.06] p-3">
+      <p className={compact ? "text-[0.66rem] font-bold uppercase text-amber-200" : "text-xs font-bold uppercase tracking-[0.18em] text-amber-200"}>
+        {label}
+      </p>
+      <p className={compact ? "mt-2 font-mono text-xl font-black text-white" : "mt-3 font-mono text-3xl font-black text-white"}>
+        {number === undefined ? "---.---" : formatNumber(number)}
+      </p>
+      <p className={compact ? "mt-1 truncate text-xs text-zinc-300" : "mt-1 text-sm text-zinc-300"}>{owner ?? "Aguardando participante"}</p>
+      <p className={compact ? "mt-2 text-xs font-black text-amber-100" : "mt-3 text-sm font-black text-amber-100"}>Premio: {prize}</p>
     </div>
   );
 }
@@ -192,7 +233,7 @@ export function FoundPrizes({ prizes }: Readonly<{ prizes: InstantPrize[] }>) {
 
   return (
     <section className="panel p-5">
-      <SectionTitle icon={Gift} title="Numeros premiados encontrados" />
+      <SectionTitle icon={Gift} title="Cotas premiadas encontradas" />
       <p className="mt-2 text-sm text-zinc-400">
         Esta campanha pode disponibilizar numeros premiados durante periodos promocionais.
       </p>

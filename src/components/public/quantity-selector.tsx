@@ -51,7 +51,7 @@ export function QuantitySelector({ campaign }: Readonly<{ campaign: Campaign }>)
   }
 
   return (
-    <div className="mt-5">
+    <div className="mt-4">
       <div className="grid grid-cols-[44px_1fr_44px] gap-2">
         <button className="icon-button" type="button" aria-label="Diminuir cotas" onClick={() => setQuantity((q) => clamp(q - 1))}>
           <Minus size={18} />
@@ -74,7 +74,7 @@ export function QuantitySelector({ campaign }: Readonly<{ campaign: Campaign }>)
           </button>
         ))}
       </div>
-      <div className="mt-5 rounded-lg border border-white/10 bg-black/35 p-4">
+      <div className="mt-4 rounded-lg border border-white/10 bg-black/35 p-4">
         <p className="text-sm text-zinc-400">
           {quantity.toLocaleString("pt-BR")} cotas x {formatCurrency(campaign.pricePerNumberCents)}
         </p>

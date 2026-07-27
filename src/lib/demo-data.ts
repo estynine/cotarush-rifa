@@ -78,7 +78,7 @@ export const demoCampaigns: Campaign[] = [
       lowestEnabled: true,
       highestEnabled: true,
       lowestValueCents: 5000,
-      highestValueCents: 10000,
+      highestValueCents: 5000,
       countExtraNumbers: false,
     },
   },

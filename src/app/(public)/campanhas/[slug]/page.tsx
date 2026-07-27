@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import {
-  CampaignHero,
-  CampaignProgress,
+  CampaignMobileHero,
   CampaignPurchasePanel,
   CampaignTopTen,
   DailyBuyerRanking,
@@ -23,22 +22,15 @@ export default async function CampaignDetailPage({ params }: Readonly<{ params: 
 
   return (
     <>
-      <CampaignHero campaign={campaign} />
-      <section className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_380px] lg:px-8">
-        <div className="grid gap-6">
-          <section className="panel p-5">
-            <h2 className="text-xl font-black text-white">Detalhes da campanha</h2>
-            <p className="mt-3 leading-7 text-zinc-300">{campaign.fullDescription}</p>
-            <CampaignProgress campaign={campaign} />
-          </section>
-          <div className="grid gap-6 xl:grid-cols-2">
-            <DailyBuyerRanking entries={demoDailyRanking} />
-            <CampaignTopTen entries={demoCampaignTopTen} />
-          </div>
-          <DailyNumberExtremes campaign={campaign} extremes={demoDailyExtremes} />
-          <FoundPrizes prizes={demoInstantPrizes} />
-        </div>
+      <section className="mx-auto grid max-w-xl gap-4 px-3 py-4 sm:px-4 lg:max-w-2xl">
+        <DailyNumberExtremes campaign={campaign} extremes={demoDailyExtremes} compact />
+        <CampaignMobileHero campaign={campaign} />
         <CampaignPurchasePanel campaign={campaign} />
+        <FoundPrizes prizes={demoInstantPrizes} />
+        <div className="grid gap-4">
+          <DailyBuyerRanking entries={demoDailyRanking} />
+          <CampaignTopTen entries={demoCampaignTopTen} />
+        </div>
       </section>
     </>
   );
