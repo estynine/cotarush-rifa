@@ -76,6 +76,18 @@ describe("permissoes server-side", () => {
     expect(canReadParticipantResource(participant, "participant-1")).toBe(true);
     expect(canReadParticipantResource(participant, "other")).toBe(false);
   });
+
+  it("area do participante filtra dados demo pelo usuario atual", () => {
+    const accountOrdersPage = read("src/app/(account)/conta/compras/page.tsx");
+    const accountNumbersPage = read("src/app/(account)/conta/numeros/page.tsx");
+    const accountAwardsPage = read("src/app/(account)/conta/premiacoes/page.tsx");
+    const orderApi = read("src/app/api/orders/[orderId]/route.ts");
+
+    expect(accountOrdersPage).toContain("order.participantId === user.id");
+    expect(accountNumbersPage).toContain("allocation.participantId === user.id");
+    expect(accountAwardsPage).toContain("award.participantId === user.id");
+    expect(orderApi).toContain("canReadParticipantResource(user, order.participantId)");
+  });
 });
 
 describe("retomada de compra", () => {

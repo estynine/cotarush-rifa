@@ -21,8 +21,8 @@ export default function Home() {
             </h1>
             <p className="mt-4 max-w-2xl text-xl font-semibold text-violet-100">Campanhas Premiadas</p>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
-              Plataforma completa para operar campanhas premiadas com numeros de seis digitos, Pix, rankings,
-              premiacoes instantaneas, apuracao final e auditoria administrativa.
+              Plataforma completa para campanhas premiadas com numeros de seis digitos, Pix, rankings,
+              premiacoes instantaneas, apuracao final e conferencia segura.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link className="btn-primary" href={`/campanhas/${campaign.slug}`}>

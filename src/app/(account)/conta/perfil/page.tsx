@@ -1,7 +1,9 @@
 import { demoProfiles } from "@/lib/demo-data";
+import { requireUser } from "@/lib/auth";
 
-export default function AccountProfilePage() {
-  const profile = demoProfiles[0];
+export default async function AccountProfilePage() {
+  const user = await requireUser();
+  const profile = demoProfiles.find((item) => item.id === user.id) ?? demoProfiles[0];
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">

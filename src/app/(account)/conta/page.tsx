@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { demoProfiles } from "@/lib/demo-data";
+import { requireUser } from "@/lib/auth";
 
-export default function AccountPage() {
-  const profile = demoProfiles[0];
+export default async function AccountPage() {
+  const user = await requireUser();
+  const profile = demoProfiles.find((item) => item.id === user.id) ?? demoProfiles[0];
+
   return (
     <>
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">

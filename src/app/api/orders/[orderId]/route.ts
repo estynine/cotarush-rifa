@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { demoOrders } from "@/lib/demo-data";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 import { requireUser } from "@/lib/auth";
+import { canReadParticipantResource } from "@/lib/authorization";
 
 export async function GET(_request: Request, { params }: Readonly<{ params: Promise<{ orderId: string }> }>) {
   const { orderId } = await params;
@@ -11,6 +12,10 @@ export async function GET(_request: Request, { params }: Readonly<{ params: Prom
 
     if (!hasSupabaseEnv()) {
       const order = demoOrders.find((item) => item.id === orderId);
+      if (!order || !canReadParticipantResource(user, order.participantId)) {
+        return NextResponse.json({ error: "Pedido nao encontrado." }, { status: 404 });
+      }
+
       return NextResponse.json({
         order,
         payment: {

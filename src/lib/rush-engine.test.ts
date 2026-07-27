@@ -54,6 +54,36 @@ describe("distribuicao de cotas", () => {
     expect(second.allocations.every((item) => !reserved.has(item.number))).toBe(true);
   });
 
+  it("simula varias compras simultaneas sem entregar a mesma cota", async () => {
+    const existingNumbers = new Set<number>();
+    const orders = Array.from({ length: 12 }, (_, index) => ({
+      orderId: `order-concurrent-${index}`,
+      participantId: `participant-${index}`,
+    }));
+
+    const batches = await Promise.all(
+      orders.map(async (order, index) => {
+        const result = allocateRandomNumbers({
+          campaignId,
+          participantId: order.participantId,
+          orderId: order.orderId,
+          quantity: 75,
+          totalNumbers: 2000,
+          existingNumbers,
+          instantPrizes: [],
+          random: sequenceRandom(index * 37),
+        });
+
+        result.allocations.forEach((allocation) => existingNumbers.add(allocation.number));
+        return result.allocations;
+      }),
+    );
+
+    const allocated = batches.flat().map((allocation) => allocation.number);
+    expect(allocated).toHaveLength(900);
+    expect(new Set(allocated)).toHaveLength(900);
+  });
+
   it("nao distribui numero premiado desativado", () => {
     expect(isNumberAllowedForDistribution(222222, [{ number: 222222, active: false, found: false }])).toBe(false);
   });
@@ -153,8 +183,8 @@ describe("rankings e webhooks", () => {
   });
 });
 
-function sequenceRandom() {
-  let current = 0;
+function sequenceRandom(seed = 0) {
+  let current = seed;
   return () => {
     current = (current + 1) % 1000;
     return current / 1000;
