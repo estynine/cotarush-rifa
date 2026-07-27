@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { campaignSchema } from "@/lib/validations";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
     const admin = await requireAdmin();
+    const proxied = await proxyToBackend(request, "/admin/campaigns");
+    if (proxied) return proxied;
+
     const input = campaignSchema.parse(await request.json());
 
     if (!hasSupabaseEnv()) {

@@ -163,3 +163,21 @@ describe("multi adm e split financeiro", () => {
     expect(migration).toContain("admins manage scoped instant prizes");
   });
 });
+
+describe("backend separado", () => {
+  it("possui workspace backend separado e proxy de compatibilidade no frontend", () => {
+    const packageJson = read("package.json");
+    const backendServer = read("apps/backend/src/server.mjs");
+    const backendPackage = read("apps/backend/package.json");
+    const proxy = read("src/lib/backend-proxy.ts");
+    const ordersRoute = read("src/app/api/orders/route.ts");
+
+    expect(packageJson).toContain("apps/backend");
+    expect(packageJson).toContain("dev:backend");
+    expect(backendPackage).toContain("@cotarush/backend");
+    expect(backendServer).toContain("http.createServer");
+    expect(backendServer).toContain("/health");
+    expect(proxy).toContain("BACKEND_API_URL");
+    expect(ordersRoute).toContain('proxyToBackend(request, "/orders")');
+  });
+});

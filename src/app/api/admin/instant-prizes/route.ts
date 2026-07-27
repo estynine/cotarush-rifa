@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { instantPrizeBatchControlSchema, instantPrizeControlSchema } from "@/lib/validations";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 
@@ -18,6 +19,9 @@ type InstantPrizeUpdate = {
 export async function PATCH(request: Request) {
   try {
     const admin = await requireAdmin();
+    const proxied = await proxyToBackend(request, "/admin/instant-prizes");
+    if (proxied) return proxied;
+
     const body = await request.json();
     if (typeof body === "object" && body !== null && "campaignId" in body) {
       const input = instantPrizeBatchControlSchema.parse(body);

@@ -4,7 +4,9 @@ Aplicacao Next.js App Router para campanhas premiadas com area publica, area do 
 
 ## Arquitetura
 
-- `src/app`: rotas publicas, participante, admin e APIs.
+- `src/app`: frontend Next.js com rotas publicas, participante e admin.
+- `src/app/api`: camada de compatibilidade/proxy para o frontend web.
+- `apps/backend`: backend HTTP separado para auth, pedidos, admin, webhooks e integracao Supabase/Mercado Pago.
 - `src/components`: componentes reutilizaveis como `CampaignCard`, `QuantitySelector`, `PixPaymentCard`, `MyNumbersGrid`, `AdminSidebar/DataTable` e blocos de ranking.
 - `src/lib`: regras de dominio, formatacao brasileira, validacoes Zod, clientes Supabase/Mercado Pago e motor testavel de alocacao.
 - `supabase/migrations`: schema PostgreSQL completo, RLS, indices, seeds e funcoes transacionais.
@@ -29,6 +31,9 @@ Copie `.env.example` para `.env.local` e preencha:
 
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+BACKEND_API_URL=http://localhost:4000
+BACKEND_PORT=4000
+FRONTEND_ORIGIN=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
@@ -69,8 +74,11 @@ Admins devem ativar 2FA no provedor de autenticacao quando disponivel.
 
 ```bash
 npm install
-npm run dev
+npm run dev:backend
+npm run dev:frontend
 ```
+
+Se `BACKEND_API_URL` nao estiver configurado, o frontend usa as rotas internas de compatibilidade. Quando estiver configurado, chamadas de negocio como cadastro, pedidos, admin e webhooks podem ser encaminhadas ao backend separado.
 
 Sem Supabase configurado, o app usa um fallback local seguro: visitante nao acessa `/admin` nem `/conta` sem sessao. Para testar o painel ADM localmente, use:
 

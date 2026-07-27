@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { demoAdminTenants } from "@/lib/demo-data";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { getServerSupabase, getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 import { signUpSchema } from "@/lib/validations";
 
@@ -8,6 +9,9 @@ function safeString(value: FormDataEntryValue | null): string {
 }
 
 export async function POST(request: Request) {
+  const proxied = await proxyToBackend(request, "/auth/signup");
+  if (proxied) return proxied;
+
   try {
     const formData = await request.formData();
     const input = signUpSchema.parse({

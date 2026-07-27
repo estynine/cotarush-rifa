@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createPixPayment } from "@/lib/mercadopago";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { createOrderSchema, validateQuantityAgainstCampaign } from "@/lib/validations";
 import { calculateOrderTotal } from "@/lib/format";
 import { demoCampaigns } from "@/lib/demo-data";
@@ -9,6 +10,9 @@ import { requireUser } from "@/lib/auth";
 export async function POST(request: Request) {
   try {
     const user = await requireUser();
+    const proxied = await proxyToBackend(request, "/orders");
+    if (proxied) return proxied;
+
     const body = await request.json();
     const input = createOrderSchema.parse(body);
 

@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { demoOrders } from "@/lib/demo-data";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 import { requireUser } from "@/lib/auth";
 import { canReadParticipantResource } from "@/lib/authorization";
 
-export async function GET(_request: Request, { params }: Readonly<{ params: Promise<{ orderId: string }> }>) {
+export async function GET(request: Request, { params }: Readonly<{ params: Promise<{ orderId: string }> }>) {
   const { orderId } = await params;
 
   try {
     const user = await requireUser();
+    const proxied = await proxyToBackend(request, `/orders/${orderId}`);
+    if (proxied) return proxied;
 
     if (!hasSupabaseEnv()) {
       const order = demoOrders.find((item) => item.id === orderId);

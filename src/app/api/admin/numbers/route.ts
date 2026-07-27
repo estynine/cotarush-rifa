@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { demoAllocations, demoOrders, demoProfiles } from "@/lib/demo-data";
 import { parseFormattedNumber } from "@/lib/format";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
@@ -7,6 +8,9 @@ import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 export async function GET(request: Request) {
   try {
     const admin = await requireAdmin();
+    const proxied = await proxyToBackend(request, "/admin/numbers");
+    if (proxied) return proxied;
+
     const url = new URL(request.url);
     const number = parseFormattedNumber(url.searchParams.get("number") ?? "");
     const campaignId = url.searchParams.get("campaignId");

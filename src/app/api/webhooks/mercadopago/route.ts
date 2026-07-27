@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { getMercadoPagoPayment, verifyMercadoPagoWebhookSignature } from "@/lib/mercadopago";
+import { proxyToBackend } from "@/lib/backend-proxy";
 import { getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 
 export async function POST(request: Request) {
+  const proxied = await proxyToBackend(request, "/webhooks/mercadopago");
+  if (proxied) return proxied;
+
   const rawBody = await request.text();
   const validSignature = await verifyMercadoPagoWebhookSignature(request, rawBody);
   if (!validSignature) {
