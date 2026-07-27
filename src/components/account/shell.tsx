@@ -20,7 +20,7 @@ export function AccountShell({
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.14),transparent_30%),linear-gradient(180deg,#050507,#0b0b12_45%,#050507)]" />
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-black/72 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050507] shadow-[0_18px_40px_rgba(0,0,0,0.5)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-3">
             <Logo />

@@ -17,7 +17,7 @@ export function PublicShell({
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_10%_20%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(124,58,237,0.2),transparent_30%),linear-gradient(180deg,#050507,#0b0b12_45%,#050507)]" />
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-black/65 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050507] shadow-[0_18px_40px_rgba(0,0,0,0.5)]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Logo />
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Principal">
