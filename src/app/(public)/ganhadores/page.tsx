@@ -5,9 +5,9 @@ import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 export default function WinnersPage() {
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-xl px-3 py-6 sm:px-4">
         <h1 className="text-3xl font-black text-white">Ganhadores anteriores</h1>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="mt-6 grid gap-4">
           {demoAwards.map((award) => {
             const profile = demoProfiles.find((item) => item.id === award.participantId);
             const campaign = demoCampaigns.find((item) => item.id === award.campaignId);

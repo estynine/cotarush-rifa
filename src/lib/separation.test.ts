@@ -45,10 +45,10 @@ describe("separacao visual e imports", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("login publico nao oferece entrada administrativa", () => {
+  it("login publico oferece entrada administrativa separada", () => {
     const login = read("src/app/(public)/login/page.tsx");
     expect(login).not.toMatch(/Entrar como ADM|Entrar no painel|Painel do ADM/i);
-    expect(login).not.toContain('href="/admin');
+    expect(login).toContain('href="/admin/login"');
   });
 });
 

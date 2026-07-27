@@ -8,9 +8,9 @@ export default async function AccountPage() {
 
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="px-3 py-6 sm:px-4">
         <h1 className="text-3xl font-black text-white">Minha conta</h1>
-        <div className="mt-6 grid gap-5 lg:grid-cols-[320px_1fr]">
+        <div className="mt-6 grid gap-5">
           <aside className="panel p-5">
             <p className="text-xl font-black text-white">{profile.publicName}</p>
             <p className="mt-1 text-sm text-zinc-400">{profile.email}</p>
@@ -23,7 +23,7 @@ export default async function AccountPage() {
           </aside>
           <section className="panel p-5">
             <h2 className="text-xl font-black text-white">Perfil</h2>
-            <form className="mt-4 grid gap-3 md:grid-cols-2">
+            <form className="mt-4 grid gap-3">
               <input className="form-input" defaultValue={profile.fullName} aria-label="Nome completo" />
               <input className="form-input" defaultValue={profile.publicName} aria-label="Nome publico" />
               <input className="form-input" defaultValue={profile.phone} aria-label="Telefone" />

@@ -38,7 +38,7 @@ export function PixPaymentCard({ initialPayment }: Readonly<{ initialPayment: Pi
           <p className="text-sm text-zinc-400">Atualizacao automatica apos confirmacao oficial.</p>
         </div>
       </div>
-      <div className="mt-6 grid gap-5 md:grid-cols-[220px_1fr]">
+      <div className="mt-6 grid gap-5">
         <div className="grid aspect-square place-items-center rounded-lg border border-white/10 bg-white p-4 text-zinc-950">
           {payment.qrCodeBase64 ? (
             // eslint-disable-next-line @next/next/no-img-element

@@ -37,7 +37,7 @@ export function CampaignCard({ campaign }: Readonly<{ campaign: Campaign }>) {
 export function CampaignHero({ campaign }: Readonly<{ campaign: Campaign }>) {
   return (
     <section className="relative overflow-hidden border-b border-white/10">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-16">
+      <div className="mx-auto grid max-w-xl gap-5 px-3 py-6 sm:px-4">
         <div className="self-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-cyan-200">
             <Zap size={14} />
@@ -47,7 +47,7 @@ export function CampaignHero({ campaign }: Readonly<{ campaign: Campaign }>) {
             {campaign.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-300">{campaign.fullDescription}</p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid gap-3">
             <Metric label="Premio" value={campaign.subtitle} tone="gold" />
             <Metric label="Valor estimado" value={formatCurrency(campaign.estimatedValueCents)} />
             <Metric label="Apuracao" value={formatDateTime(campaign.drawAt)} />
@@ -125,7 +125,7 @@ export function CampaignProgress({ campaign }: Readonly<{ campaign: Campaign }>)
 
 export function CampaignPurchasePanel({ campaign }: Readonly<{ campaign: Campaign }>) {
   return (
-    <aside className="panel p-4 lg:sticky lg:top-24">
+    <aside className="panel p-4">
       <div className="rounded-lg border border-cyan-300/20 bg-cyan-300/[0.07] p-4">
         <p className="text-xs font-black uppercase text-cyan-200">Valor da cota</p>
         <p className="mt-1 text-3xl font-black text-white">{formatCurrency(campaign.pricePerNumberCents)}</p>

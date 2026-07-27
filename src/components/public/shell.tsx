@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, LifeBuoy, Menu, ShieldCheck, Trophy, Video } from "lucide-react";
+import { Camera, LifeBuoy, ShieldCheck, Trophy, UserRound, Video } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import type { SocialLinks } from "@/lib/types";
 
@@ -7,42 +7,42 @@ const navItems = [
   { href: "/campanhas", label: "Campanhas" },
   { href: "/ganhadores", label: "Ganhadores" },
   { href: "/termos", label: "Termos" },
-  { href: "/conta", label: "Minha conta" },
 ];
 
 export function PublicShell({
   children,
+  accountHref,
   socialLinks,
-}: Readonly<{ children: React.ReactNode; socialLinks?: SocialLinks }>) {
+}: Readonly<{ children: React.ReactNode; accountHref: string; socialLinks?: SocialLinks }>) {
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_10%_20%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(124,58,237,0.2),transparent_30%),linear-gradient(180deg,#050507,#0b0b12_45%,#050507)]" />
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050507] shadow-[0_18px_40px_rgba(0,0,0,0.5)]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
           <Logo />
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Principal">
-            {navItems.map((item) => (
-              <Link key={item.href} className="nav-link" href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <Link className="btn-secondary hidden sm:inline-flex" href="/login">
-              Entrar
+          <div className="flex shrink-0 items-center gap-2">
+            <Link className="btn-primary px-3 text-xs" href="/campanhas">
+              Comprar
             </Link>
-            <Link className="btn-primary" href="/campanhas">
-              Comprar agora
+            <Link className="icon-button" href={accountHref} aria-label="Conta">
+              <UserRound size={18} />
             </Link>
-            <button className="icon-button lg:hidden" aria-label="Abrir menu">
-              <Menu size={20} />
-            </button>
           </div>
         </div>
+        <nav className="mx-auto flex max-w-xl gap-2 overflow-x-auto px-3 pb-3 text-sm sm:px-4" aria-label="Principal">
+          {navItems.map((item) => (
+            <Link key={item.href} className="nav-link shrink-0" href={item.href}>
+              {item.label}
+            </Link>
+          ))}
+          <Link className="nav-link shrink-0" href={accountHref}>
+            Minha conta
+          </Link>
+        </nav>
       </header>
       <main>{children}</main>
       <footer className="border-t border-white/10 bg-black/70">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.2fr_1fr_1fr] lg:px-8">
+        <div className="mx-auto grid max-w-xl gap-8 px-4 py-10 sm:px-6">
           <div>
             <Logo />
             <p className="mt-4 max-w-md text-sm leading-6 text-zinc-400">
@@ -96,7 +96,7 @@ export function SocialLinks({ links }: Readonly<{ links?: SocialLinks }>) {
 function FloatingSupportButton({ url }: Readonly<{ url?: string }>) {
   return (
     <a
-      className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400 px-4 py-3 text-sm font-black text-emerald-950 shadow-[0_0_35px_rgba(52,211,153,0.35)] transition hover:-translate-y-0.5"
+      className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400 px-4 py-3 text-sm font-black text-emerald-950 shadow-[0_0_35px_rgba(52,211,153,0.35)]"
       href={url ?? "/conta"}
       target={url ? "_blank" : undefined}
       rel={url ? "noreferrer noopener" : undefined}

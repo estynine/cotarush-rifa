@@ -22,7 +22,7 @@ export default async function CampaignDetailPage({ params }: Readonly<{ params: 
 
   return (
     <>
-      <section className="mx-auto grid max-w-xl gap-4 px-3 py-4 sm:px-4 lg:max-w-2xl">
+      <section className="mx-auto grid max-w-xl gap-4 px-3 py-4 sm:px-4">
         <DailyNumberExtremes campaign={campaign} extremes={demoDailyExtremes} compact />
         <CampaignMobileHero campaign={campaign} />
         <CampaignPurchasePanel campaign={campaign} />

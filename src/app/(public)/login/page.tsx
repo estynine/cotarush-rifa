@@ -32,6 +32,11 @@ export default async function LoginPage({
             Recuperar senha
           </Link>
         </div>
+        <div className="mt-6 border-t border-white/10 pt-4">
+          <Link className="btn-secondary w-full" href="/admin/login">
+            Administrador
+          </Link>
+        </div>
       </AuthCard>
     </>
   );

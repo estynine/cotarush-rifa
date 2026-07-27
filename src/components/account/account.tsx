@@ -73,7 +73,7 @@ export function MyNumbersGrid({ allocations }: Readonly<{ allocations: NumberAll
             <h2 className="font-black text-white">
               {date} - {numbers.length.toLocaleString("pt-BR")} numeros
             </h2>
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {numbers.map((allocation) => (
                 <span
                   key={allocation.id}
