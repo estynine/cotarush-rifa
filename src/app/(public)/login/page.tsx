@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/shared/logo";
 
 export default async function LoginPage({
   searchParams,
@@ -46,7 +47,8 @@ export function AuthCard({ title, subtitle, children }: Readonly<{ title: string
   return (
     <section className="mx-auto max-w-xl px-4 py-12 sm:px-6">
       <div className="panel p-6">
-        <h1 className="text-3xl font-black text-white">{title}</h1>
+        <Logo />
+        <h1 className="mt-6 text-3xl font-black text-white">{title}</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-400">{subtitle}</p>
         <div className="mt-6">{children}</div>
       </div>
