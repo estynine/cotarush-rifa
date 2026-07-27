@@ -121,3 +121,15 @@ describe("controle de premios instantaneos", () => {
     expect(migration).toContain("instant_prizes_release_controls_valid");
   });
 });
+
+describe("estados vazios", () => {
+  it("paginas de ganhadores avisam quando nao ha ganhadores", () => {
+    const publicWinners = read("src/app/(public)/ganhadores/page.tsx");
+    const adminWinners = read("src/app/admin/(panel)/ganhadores/page.tsx");
+
+    expect(publicWinners).toContain("Ainda nao tem ganhadores.");
+    expect(publicWinners).toContain("demoAwards.length === 0");
+    expect(adminWinners).toContain("Ainda nao tem ganhadores.");
+    expect(adminWinners).toContain("demoAwards.length === 0");
+  });
+});
