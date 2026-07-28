@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminLoginPage({
   searchParams,
-}: Readonly<{ searchParams: Promise<{ error?: string }> }>) {
-  const { error } = await searchParams;
+}: Readonly<{ searchParams: Promise<{ error?: string; created?: string }> }>) {
+  const { error, created } = await searchParams;
 
   return (
     <main className="grid min-h-screen place-items-center bg-[#050507] px-4 text-zinc-100">
@@ -21,6 +21,11 @@ export default async function AdminLoginPage({
         {error ? (
           <p className="mt-4 rounded-lg border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-100">
             Acesso restrito ao administrador autorizado.
+          </p>
+        ) : null}
+        {created === "1" ? (
+          <p className="mt-4 rounded-lg border border-emerald-400/30 bg-emerald-400/10 p-3 text-sm text-emerald-100">
+            Conta ADM criada. Entre com o e-mail e a senha cadastrados.
           </p>
         ) : null}
         <form className="mt-6 grid gap-3" action="/api/auth/login" method="post">
@@ -40,6 +45,9 @@ export default async function AdminLoginPage({
         </form>
         <Link className="btn-secondary mt-3 w-full" href="/login">
           Voltar
+        </Link>
+        <Link className="mt-4 block text-center text-sm font-bold text-cyan-200" href="/admin/cadastro">
+          Criar conta ADM
         </Link>
       </section>
     </main>

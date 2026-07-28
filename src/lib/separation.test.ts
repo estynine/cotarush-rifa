@@ -56,6 +56,29 @@ describe("separacao visual e imports", () => {
     expect(adminLogin).toContain('href="/login"');
     expect(adminLogin).toContain('action="/api/auth/demo"');
     expect(adminLogin).toContain('value="admin"');
+    expect(adminLogin).toContain('href="/admin/cadastro"');
+  });
+
+  it("cadastro de adm exige contrato e aceite registrado", () => {
+    const adminSignupPage = read("src/app/admin/cadastro/page.tsx");
+    const adminSignupForm = read("src/components/admin/admin-signup-form.tsx");
+    const adminSignupRoute = read("src/app/api/auth/admin-signup/route.ts");
+    const adminContract = read("src/lib/admin-contract.ts");
+    const validations = read("src/lib/validations.ts");
+    const migration = read("supabase/migrations/20260727224500_admin_contract_acceptances.sql");
+
+    expect(adminSignupPage).toContain("Criar conta ADM");
+    expect(adminSignupForm).toContain("Contrato da clausula");
+    expect(adminSignupForm).toContain("Li todo o contrato");
+    expect(adminSignupForm).toContain("disabled={!contractRead}");
+    expect(adminSignupRoute).toContain("admin_contract_acceptances");
+    expect(adminSignupRoute).toContain("admin_invite_codes");
+    expect(adminContract).toContain("A plataforma retem 50%");
+    expect(adminContract).not.toMatch(/Supabase|Vercel/i);
+    expect(validations).toContain("adminSignUpSchema");
+    expect(validations).toContain("contractAccepted");
+    expect(migration).toContain("admin_contract_acceptances");
+    expect(migration).toContain("contract_version");
   });
 
   it("cadastro gera nome publico automaticamente e mantem demo participante", () => {

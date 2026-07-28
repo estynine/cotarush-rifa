@@ -34,6 +34,23 @@ export const signInSchema = z.object({
   password: z.string().min(1, "Informe sua senha."),
 });
 
+export const adminSignUpSchema = z
+  .object({
+    fullName: z.string().trim().min(3, "Informe seu nome completo."),
+    publicName: z.string().trim().min(2, "Informe o nome publico do ADM."),
+    email: z.email("Informe um e-mail valido.").toLowerCase(),
+    phone: z.string().transform(normalizePhone).pipe(z.string().min(10).max(13)),
+    documentNumber: z.string().trim().min(3, "Informe o documento do ADM."),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+    contractVersion: z.string().trim().min(3),
+    contractAccepted: z.literal(true, "Aceite o contrato de adesao."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas nao conferem.",
+    path: ["confirmPassword"],
+  });
+
 export const quantitySchema = z.object({
   campaignId: z.uuid(),
   quantity: z.coerce
