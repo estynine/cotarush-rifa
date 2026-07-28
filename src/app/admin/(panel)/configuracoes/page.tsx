@@ -11,6 +11,11 @@ export default async function AdminSettingsPage({
       <AdminTitle title="Configuracoes" description="Redes sociais, suporte, Mercado Pago, compliance e parametros globais." />
       {status === "saved" ? <p className="alert-line mt-6 border-emerald-300/20 bg-emerald-300/[0.06] text-emerald-100">Configuracao salva.</p> : null}
       {error === "support" ? <p className="alert-line mt-6 border-red-300/20 bg-red-300/[0.06] text-red-100">Nao foi possivel salvar o suporte.</p> : null}
+      <div className="mt-6">
+        <a className="btn-secondary w-full" href="/api/admin/preview-user">
+          Inspecionar como usuario
+        </a>
+      </div>
       <form className="panel mt-6 grid gap-3 p-5 md:grid-cols-2" action="/api/admin/settings/support" method="post">
         <label className="grid gap-2 text-sm font-bold text-zinc-300">
           Numero do suporte
@@ -39,6 +44,10 @@ export default async function AdminSettingsPage({
         <label className="grid gap-2 text-sm font-bold text-zinc-300">
           YouTube
           <input className="form-input" name="youtube" defaultValue={demoSocialLinks.youtube} />
+        </label>
+        <label className="grid gap-2 text-sm font-bold text-zinc-300">
+          Telegram
+          <input className="form-input" name="telegram" defaultValue={demoSocialLinks.telegram} placeholder="https://t.me/seucanal" />
         </label>
         <div className="md:col-span-2">
           <ConfirmActionDialog />

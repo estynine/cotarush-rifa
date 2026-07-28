@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, LifeBuoy, ShieldCheck, Trophy, UserRound, Video } from "lucide-react";
+import { Camera, LifeBuoy, Send, ShieldCheck, Trophy, UserRound, Video } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import type { SocialLinks } from "@/lib/types";
 
@@ -12,7 +12,8 @@ export function PublicShell({
   children,
   accountHref,
   socialLinks,
-}: Readonly<{ children: React.ReactNode; accountHref: string; socialLinks?: SocialLinks }>) {
+  previewMode = false,
+}: Readonly<{ children: React.ReactNode; accountHref: string; socialLinks?: SocialLinks; previewMode?: boolean }>) {
   const supportUrl = socialLinks?.supportEnabled === false ? undefined : socialLinks?.whatsappSupport;
 
   return (
@@ -40,6 +41,16 @@ export function PublicShell({
             Minha conta
           </Link>
         </nav>
+        {previewMode ? (
+          <div className="border-t border-amber-200/20 bg-amber-200/[0.08]">
+            <div className="mx-auto flex max-w-xl items-center justify-between gap-3 px-3 py-2 text-xs font-bold text-amber-100 sm:px-4">
+              <span>Voce esta vendo como o usuario veria.</span>
+              <a className="text-amber-50 underline" href="/api/admin/preview-user/exit">
+                Voltar ao ADM
+              </a>
+            </div>
+          </div>
+        ) : null}
       </header>
       <main>{children}</main>
       <footer className="border-t border-white/10 bg-black/70">
@@ -69,8 +80,11 @@ export function SocialLinks({ links }: Readonly<{ links?: SocialLinks }>) {
   const items = [
     { href: links?.instagram, label: "Instagram", icon: Camera },
     { href: links?.youtube, label: "YouTube", icon: Video },
+    { href: links?.telegram, label: "Telegram", icon: Send },
     { href: links?.whatsappGroup, label: "Grupo WhatsApp", icon: Trophy },
   ].filter((item) => item.href);
+
+  if (items.length === 0) return null;
 
   return (
     <div>

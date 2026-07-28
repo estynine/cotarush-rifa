@@ -34,6 +34,7 @@ export const demoSocialLinks: SocialLinks = {
   instagram: "https://instagram.com/cotarush",
   tiktok: "https://tiktok.com/@cotarush",
   youtube: "https://youtube.com/@cotarush",
+  telegram: "https://t.me/cotarush",
 };
 
 export const demoProfiles: Profile[] = [

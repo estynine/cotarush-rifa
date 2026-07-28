@@ -166,6 +166,7 @@ export type SocialLinks = {
   instagram?: string;
   tiktok?: string;
   youtube?: string;
+  telegram?: string;
 };
 
 export type AdminTenant = {

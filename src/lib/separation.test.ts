@@ -85,14 +85,37 @@ describe("separacao visual e imports", () => {
     const settingsPage = read("src/app/admin/(panel)/configuracoes/page.tsx");
     const supportApi = read("src/app/api/admin/settings/support/route.ts");
     const migration = read("supabase/migrations/20260727203000_admin_support_settings.sql");
+    const socialMigration = read("supabase/migrations/20260727220000_admin_social_links_telegram.sql");
+    const siteSettings = read("src/lib/site-settings.ts");
 
     expect(publicShell).toContain("supportEnabled === false");
     expect(publicShell).toContain("if (!url) return null");
+    expect(publicShell).toContain("links?.telegram");
+    expect(publicShell).toContain("if (items.length === 0) return null");
     expect(accountShell).toContain("supportUrl ? (");
     expect(settingsPage).toContain("Desativar suporte");
+    expect(settingsPage).toContain("Telegram");
+    expect(settingsPage).toContain("Inspecionar como usuario");
     expect(supportApi).toContain("support_settings");
+    expect(supportApi).toContain("social_links");
+    expect(supportApi).toContain("telegram");
+    expect(siteSettings).toContain("getPublicSocialLinks");
     expect(migration).toContain("enabled boolean");
     expect(migration).toContain("admins manage scoped support settings");
+    expect(socialMigration).toContain("telegram text");
+    expect(socialMigration).toContain("admins manage scoped social links");
+  });
+
+  it("admin pode inspecionar a area publica como usuario com aviso", () => {
+    const previewStart = read("src/app/api/admin/preview-user/route.ts");
+    const previewExit = read("src/app/api/admin/preview-user/exit/route.ts");
+    const publicShell = read("src/components/public/shell.tsx");
+
+    expect(previewStart).toContain("requireAdmin");
+    expect(previewStart).toContain("cotarush_user_preview");
+    expect(previewExit).toContain("maxAge: 0");
+    expect(publicShell).toContain("Voce esta vendo como o usuario veria.");
+    expect(publicShell).toContain("/api/admin/preview-user/exit");
   });
 });
 
