@@ -1,9 +1,20 @@
-import { Crown, Gift, TrendingUp } from "lucide-react";
+import { Crown, TrendingUp } from "lucide-react";
 import type { Campaign, DailyExtremes, RankingEntry } from "@/lib/types";
 import { formatCurrency, formatDateTime, formatNumber } from "@/lib/format";
 
-export function AdminDailyRankingTable({ entries }: Readonly<{ entries: RankingEntry[] }>) {
-  return <AdminRankingTable title="Ranking diario" icon={<TrendingUp size={18} />} entries={entries.slice(0, 6)} />;
+export function AdminDailyRankingTable({
+  campaign,
+  entries,
+  extremes,
+}: Readonly<{ campaign: Campaign; entries: RankingEntry[]; extremes: DailyExtremes }>) {
+  return (
+    <AdminRankingTable
+      title="Ranking diario"
+      icon={<TrendingUp size={18} />}
+      entries={entries.slice(0, 6)}
+      headerContent={<AdminDailyExtremesContent campaign={campaign} extremes={extremes} />}
+    />
+  );
 }
 
 export function AdminTopTenTable({ entries }: Readonly<{ entries: RankingEntry[] }>) {
@@ -14,13 +25,15 @@ function AdminRankingTable({
   title,
   icon,
   entries,
-}: Readonly<{ title: string; icon: React.ReactNode; entries: RankingEntry[] }>) {
+  headerContent,
+}: Readonly<{ title: string; icon: React.ReactNode; entries: RankingEntry[]; headerContent?: React.ReactNode }>) {
   return (
     <section className="panel p-4">
       <h2 className="flex items-center gap-2 text-base font-black text-white">
         <span className="text-cyan-200">{icon}</span>
         {title}
       </h2>
+      {headerContent}
       <div className="mt-4 grid gap-2">
         {entries.length === 0 ? (
           <p className="empty-state">Sem dados ainda.</p>
@@ -41,16 +54,12 @@ function AdminRankingTable({
   );
 }
 
-export function AdminDailyExtremesPanel({
+function AdminDailyExtremesContent({
   extremes,
   campaign,
 }: Readonly<{ extremes: DailyExtremes; campaign: Campaign }>) {
   return (
-    <section className="panel p-4">
-      <h2 className="flex items-center gap-2 text-base font-black text-white">
-        <Gift size={18} className="text-cyan-200" />
-        Menor e maior do dia
-      </h2>
+    <>
       <div className="mt-4 grid grid-cols-2 gap-2">
         <ExtremeAdminCard
           label="Menor cota"
@@ -68,7 +77,7 @@ export function AdminDailyExtremesPanel({
       <p className="mt-3 text-xs text-zinc-500">
         Atualizacao: {extremes.updatedAt ? formatDateTime(extremes.updatedAt) : "aguardando cotas"}
       </p>
-    </section>
+    </>
   );
 }
 
