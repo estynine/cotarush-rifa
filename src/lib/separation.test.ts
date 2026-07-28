@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { canAccessAccount, canAccessAdmin, canReadParticipantResource } from "./authorization";
+import { ADMIN_NET_BPS, PLATFORM_FEE_BPS, PLATFORM_SPLIT_RULE_VERSION, calculatePlatformSplit } from "./revenue-split";
 
 const root = process.cwd();
 
@@ -235,6 +236,15 @@ describe("estados vazios", () => {
 });
 
 describe("multi adm e split financeiro", () => {
+  it("calcula split fixo de 50 por cento no servidor", () => {
+    expect(PLATFORM_FEE_BPS).toBe(5000);
+    expect(ADMIN_NET_BPS).toBe(5000);
+    expect(PLATFORM_SPLIT_RULE_VERSION).toBe("platform_split_50_50_v1");
+    expect(calculatePlatformSplit(100)).toMatchObject({ platformFeeCents: 50, adminNetCents: 50 });
+    expect(calculatePlatformSplit(101)).toMatchObject({ platformFeeCents: 50, adminNetCents: 51 });
+    expect(() => calculatePlatformSplit(0)).toThrow("Valor total invalido");
+  });
+
   it("cadastro exige codigo unico de adm com 1 letra e 3 numeros", () => {
     const validations = read("src/lib/validations.ts");
     const signup = read("src/app/api/auth/signup/route.ts");
@@ -252,16 +262,26 @@ describe("multi adm e split financeiro", () => {
 
   it("pedidos registram metade da plataforma e metade do adm", () => {
     const ordersApi = read("src/app/api/orders/route.ts");
+    const backendServer = read("apps/backend/src/server.mjs");
     const migration = read("supabase/migrations/20260727170000_admin_tenant_revenue_split.sql");
+    const enforcementMigration = read("supabase/migrations/20260727230000_backend_payment_split_enforcement.sql");
     const paymentsPage = read("src/app/admin/(panel)/pagamentos/page.tsx");
     const paymentAccountApi = read("src/app/api/admin/settings/payment-account/route.ts");
     const paymentAccountMigration = read("supabase/migrations/20260727223000_admin_payment_account_details.sql");
 
+    expect(ordersApi).toContain("@/lib/revenue-split");
     expect(ordersApi).toContain("calculatePlatformSplit");
+    expect(ordersApi).toContain("Conta de recebimento do ADM nao configurada");
     expect(ordersApi).toContain("platform_fee_cents");
     expect(ordersApi).toContain("admin_net_cents");
+    expect(ordersApi).toContain("payment_split_instructions");
+    expect(backendServer).toContain("PLATFORM_FEE_BPS = 5000");
+    expect(backendServer).toContain("payment_split_instructions");
+    expect(backendServer).toContain("admin_payment_accounts");
     expect(paymentsPage).toContain("Configurar recebimento");
     expect(paymentsPage).toContain("50% de cada pagamento aprovado");
+    expect(paymentsPage).toContain("Nao existe saque manual");
+    expect(paymentsPage).toContain("divisao automatica");
     expect(paymentsPage).toContain("Salvar conta de recebimento");
     expect(paymentAccountApi).toContain("admin_payment_accounts");
     expect(paymentAccountApi).toContain("account_reference");
@@ -269,6 +289,10 @@ describe("multi adm e split financeiro", () => {
     expect(paymentAccountMigration).toContain("passaporte");
     expect(migration).toContain("order_revenue_splits");
     expect(migration).toContain("orders_revenue_split_total");
+    expect(enforcementMigration).toContain("orders_revenue_split_exact_half");
+    expect(enforcementMigration).toContain("payments_revenue_split_exact_half");
+    expect(enforcementMigration).toContain("payment_split_instructions");
+    expect(enforcementMigration).toContain("platform_fee_bps = 5000");
     expect(migration).toContain("can_manage_admin_scope");
     expect(migration).toContain("admins manage scoped allocations");
     expect(migration).toContain("admins manage scoped instant prizes");

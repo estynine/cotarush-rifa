@@ -12,6 +12,11 @@ export const adminContractSections = [
       "A plataforma retem 50% de todo valor pago por participantes em cotas. O ADM recebe os outros 50% na conta de recebimento configurada por ele. Se uma cota custa R$ 0,10, R$ 0,05 ficam para o ADM e R$ 0,05 ficam para a plataforma. Se uma cota custa R$ 50,00, R$ 25,00 ficam para o ADM e R$ 25,00 ficam para a plataforma. Se um participante paga R$ 150,00 em cotas, R$ 75,00 ficam para o ADM e R$ 75,00 ficam para a plataforma.",
   },
   {
+    title: "Divisao automatica de pagamentos",
+    body:
+      "Nao existe saque manual dentro da plataforma. O ADM deve manter uma conta de recebimento ativa e correta, pois cada pedido pago e registrado com divisao automatica: 50% do valor bruto do pagamento pertencem a plataforma e 50% pertencem ao ADM responsavel pela campanha. O ADM aceita que essa regra e obrigatoria para operar campanhas na plataforma.",
+  },
+  {
     title: "Custos e manutencao",
     body:
       "O ADM reconhece que a taxa de 50% existe para manter a plataforma em operacao, cobrir manutencao, suporte, atualizacoes, seguranca, armazenamento de dados, monitoramento e continuidade do servico para varios ADMs ao mesmo tempo. A plataforma atende multiplos administradores, campanhas e participantes, e a estabilidade do sistema depende dessa cobranca.",

@@ -23,7 +23,7 @@ export default async function AdminPaymentsPage({
       <section className="panel mt-6 p-4">
         <h2 className="text-lg font-black text-white">Configurar recebimento</h2>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
-          Cadastre a conta em que o ADM vai receber a parte dele quando um pagamento for confirmado.
+          Cadastre a conta em que o ADM vai receber a parte dele. Nao existe saque manual: cada pagamento confirmado gera uma divisao automatica de 50% para a plataforma e 50% para o ADM.
         </p>
         <form className="mt-5 grid gap-3 md:grid-cols-2" action="/api/admin/settings/payment-account" method="post">
           <label className="grid gap-2 text-sm font-bold text-zinc-300">
@@ -112,10 +112,13 @@ export default async function AdminPaymentsPage({
         </div>
         <div className="mt-4 grid gap-3 text-sm leading-6 text-zinc-300">
           <p>
-            A plataforma retém <strong className="text-white">50% de cada pagamento aprovado</strong>. O ADM recebe os outros 50% na conta configurada acima.
+            A plataforma retem <strong className="text-white">50% de cada pagamento aprovado</strong>. O ADM recebe os outros 50% na conta configurada acima.
           </p>
           <p>
             Exemplo: se a cota custa R$ 0,10, R$ 0,05 ficam para o ADM e R$ 0,05 ficam para a plataforma. Se um participante paga R$ 150,00 em cotas, R$ 75,00 ficam para o ADM e R$ 75,00 ficam para a plataforma.
+          </p>
+          <p>
+            Nao existe saque manual dentro do painel. O pedido ja e registrado com a instrucao de divisao automatica no backend, usando a conta ativa do ADM e a conta da plataforma.
           </p>
           <p>
             Essa taxa cobre infraestrutura, banco de dados, manutencao, atualizacoes, suporte e operacao multi-ADM. Cada ADM usa seu proprio link, campanha e participantes, mas todos dependem da mesma plataforma funcionando.
