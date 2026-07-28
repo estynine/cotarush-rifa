@@ -230,10 +230,20 @@ describe("multi adm e split financeiro", () => {
   it("pedidos registram metade da plataforma e metade do adm", () => {
     const ordersApi = read("src/app/api/orders/route.ts");
     const migration = read("supabase/migrations/20260727170000_admin_tenant_revenue_split.sql");
+    const paymentsPage = read("src/app/admin/(panel)/pagamentos/page.tsx");
+    const paymentAccountApi = read("src/app/api/admin/settings/payment-account/route.ts");
+    const paymentAccountMigration = read("supabase/migrations/20260727223000_admin_payment_account_details.sql");
 
     expect(ordersApi).toContain("calculatePlatformSplit");
     expect(ordersApi).toContain("platform_fee_cents");
     expect(ordersApi).toContain("admin_net_cents");
+    expect(paymentsPage).toContain("Configurar recebimento");
+    expect(paymentsPage).toContain("50% de cada pagamento aprovado");
+    expect(paymentsPage).toContain("Salvar conta de recebimento");
+    expect(paymentAccountApi).toContain("admin_payment_accounts");
+    expect(paymentAccountApi).toContain("account_reference");
+    expect(paymentAccountMigration).toContain("holder_name text");
+    expect(paymentAccountMigration).toContain("passaporte");
     expect(migration).toContain("order_revenue_splits");
     expect(migration).toContain("orders_revenue_split_total");
     expect(migration).toContain("can_manage_admin_scope");
