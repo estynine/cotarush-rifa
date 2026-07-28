@@ -16,32 +16,26 @@ function AdminRankingTable({
   entries,
 }: Readonly<{ title: string; icon: React.ReactNode; entries: RankingEntry[] }>) {
   return (
-    <section className="panel p-5">
-      <h2 className="flex items-center gap-2 text-lg font-black text-white">
+    <section className="panel p-4">
+      <h2 className="flex items-center gap-2 text-base font-black text-white">
         <span className="text-cyan-200">{icon}</span>
         {title}
       </h2>
-      <div className="table-wrap mt-4">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Posicao</th>
-              <th>Participante</th>
-              <th>Cotas</th>
-              <th>Diferenca</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry, index) => (
-              <tr key={entry.participantId}>
-                <td>{index + 1}</td>
-                <td>{entry.publicName}</td>
-                <td>{entry.quantity.toLocaleString("pt-BR")}</td>
-                <td>{entry.diffToPrevious.toLocaleString("pt-BR")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mt-4 grid gap-2">
+        {entries.length === 0 ? (
+          <p className="empty-state">Sem dados ainda.</p>
+        ) : (
+          entries.map((entry, index) => (
+            <div key={entry.participantId} className="grid grid-cols-[2.35rem_1fr_auto] items-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] p-3">
+              <span className={index < 3 ? "rank-badge rank-gold" : "rank-badge"}>{index + 1}</span>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-black text-white">{entry.publicName}</p>
+                <p className="text-xs text-zinc-500">Dif. {entry.diffToPrevious.toLocaleString("pt-BR")}</p>
+              </div>
+              <p className="font-mono text-sm font-black text-cyan-200">{entry.quantity.toLocaleString("pt-BR")}</p>
+            </div>
+          ))
+        )}
       </div>
     </section>
   );
@@ -52,32 +46,46 @@ export function AdminDailyExtremesPanel({
   campaign,
 }: Readonly<{ extremes: DailyExtremes; campaign: Campaign }>) {
   return (
-    <section className="panel p-5">
-      <h2 className="flex items-center gap-2 text-lg font-black text-white">
+    <section className="panel p-4">
+      <h2 className="flex items-center gap-2 text-base font-black text-white">
         <Gift size={18} className="text-cyan-200" />
         Menor e maior do dia
       </h2>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Menor atual</p>
-          <p className="mt-2 font-mono text-2xl font-black text-white">
-            {extremes.lowestNumber === undefined ? "---.---" : formatNumber(extremes.lowestNumber)}
-          </p>
-          <p className="mt-1 text-sm text-zinc-400">{extremes.lowestOwner ?? "Sem participante"}</p>
-          <p className="mt-2 text-sm font-black text-amber-100">{formatCurrency(campaign.dailyPrize.lowestValueCents)}</p>
-        </div>
-        <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Maior atual</p>
-          <p className="mt-2 font-mono text-2xl font-black text-white">
-            {extremes.highestNumber === undefined ? "---.---" : formatNumber(extremes.highestNumber)}
-          </p>
-          <p className="mt-1 text-sm text-zinc-400">{extremes.highestOwner ?? "Sem participante"}</p>
-          <p className="mt-2 text-sm font-black text-amber-100">{formatCurrency(campaign.dailyPrize.highestValueCents)}</p>
-        </div>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <ExtremeAdminCard
+          label="Menor cota"
+          number={extremes.lowestNumber}
+          owner={extremes.lowestOwner}
+          prize={formatCurrency(campaign.dailyPrize.lowestValueCents)}
+        />
+        <ExtremeAdminCard
+          label="Maior cota"
+          number={extremes.highestNumber}
+          owner={extremes.highestOwner}
+          prize={formatCurrency(campaign.dailyPrize.highestValueCents)}
+        />
       </div>
       <p className="mt-3 text-xs text-zinc-500">
         Atualizacao: {extremes.updatedAt ? formatDateTime(extremes.updatedAt) : "aguardando cotas"}
       </p>
     </section>
+  );
+}
+
+function ExtremeAdminCard({
+  label,
+  number,
+  owner,
+  prize,
+}: Readonly<{ label: string; number?: number; owner?: string; prize: string }>) {
+  return (
+    <div className="min-w-0 rounded-lg border border-amber-200/20 bg-amber-200/[0.06] p-3">
+      <p className="text-[0.68rem] font-black uppercase text-amber-200">{label}</p>
+      <p className="mt-2 truncate font-mono text-xl font-black text-white">
+        {number === undefined ? "---.---" : formatNumber(number)}
+      </p>
+      <p className="mt-1 truncate text-xs text-zinc-300">{owner ?? "Sem participante"}</p>
+      <p className="mt-2 text-xs font-black text-amber-100">{prize}</p>
+    </div>
   );
 }
