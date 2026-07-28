@@ -5,7 +5,9 @@ import type { Campaign, DailyExtremes, InstantPrize, RankingEntry } from "@/lib/
 import { formatCurrency, formatDateTime, formatNumber, formatPercent } from "@/lib/format";
 import { QuantitySelector } from "./quantity-selector";
 
-export function CampaignCard({ campaign }: Readonly<{ campaign: Campaign }>) {
+export function CampaignCard({ campaign, href }: Readonly<{ campaign: Campaign; href?: string }>) {
+  const campaignHref = href ?? `/campanhas/${campaign.slug}`;
+
   return (
     <article className="card group overflow-hidden">
       <div className="relative min-h-48 overflow-hidden rounded-t-lg bg-[#111827]">
@@ -25,7 +27,7 @@ export function CampaignCard({ campaign }: Readonly<{ campaign: Campaign }>) {
             <p className="text-xs uppercase tracking-[0.16em] text-zinc-500">Cota</p>
             <p className="text-xl font-black text-cyan-200">{formatCurrency(campaign.pricePerNumberCents)}</p>
           </div>
-          <Link className="btn-primary" href={`/campanhas/${campaign.slug}`}>
+          <Link className="btn-primary" href={campaignHref}>
             Ver campanha
           </Link>
         </div>
@@ -229,7 +231,7 @@ function ExtremeCard({
 }
 
 export function FoundPrizes({ prizes }: Readonly<{ prizes: InstantPrize[] }>) {
-  const found = prizes.filter((prize) => prize.found);
+  const found = prizes.filter((prize) => prize.active && prize.found);
 
   return (
     <section className="panel p-5">

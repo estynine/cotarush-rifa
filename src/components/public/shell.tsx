@@ -13,6 +13,8 @@ export function PublicShell({
   accountHref,
   socialLinks,
 }: Readonly<{ children: React.ReactNode; accountHref: string; socialLinks?: SocialLinks }>) {
+  const supportUrl = socialLinks?.supportEnabled === false ? undefined : socialLinks?.whatsappSupport;
+
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_10%_20%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(124,58,237,0.2),transparent_30%),linear-gradient(180deg,#050507,#0b0b12_45%,#050507)]" />
@@ -58,7 +60,7 @@ export function PublicShell({
           <SocialLinks links={socialLinks} />
         </div>
       </footer>
-      <FloatingSupportButton url={socialLinks?.whatsappSupport} />
+      <FloatingSupportButton label={socialLinks?.supportLabel} url={supportUrl} />
     </div>
   );
 }
@@ -92,16 +94,18 @@ export function SocialLinks({ links }: Readonly<{ links?: SocialLinks }>) {
   );
 }
 
-function FloatingSupportButton({ url }: Readonly<{ url?: string }>) {
+function FloatingSupportButton({ label = "Suporte", url }: Readonly<{ label?: string; url?: string }>) {
+  if (!url) return null;
+
   return (
     <a
       className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400 px-4 py-3 text-sm font-black text-emerald-950 shadow-[0_0_35px_rgba(52,211,153,0.35)]"
-      href={url ?? "/conta"}
-      target={url ? "_blank" : undefined}
-      rel={url ? "noreferrer noopener" : undefined}
+      href={url}
+      target="_blank"
+      rel="noreferrer noopener"
     >
       <LifeBuoy size={18} />
-      Suporte
+      {label}
     </a>
   );
 }

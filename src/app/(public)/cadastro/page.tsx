@@ -1,4 +1,5 @@
 import { AuthCard } from "../login/page";
+import { SignupForm } from "@/components/public/signup-form";
 
 export default async function CadastroPage({
   searchParams,
@@ -19,24 +20,7 @@ export default async function CadastroPage({
             Nao foi possivel criar a conta. Confira os dados e tente novamente.
           </p>
         ) : null}
-        <form className="grid gap-3" action="/api/auth/signup" method="post">
-          <input className="form-input" name="fullName" placeholder="Nome completo" required />
-          <input className="form-input" name="publicName" placeholder="Nome publico ou apelido" required />
-          <input className="form-input" name="email" type="email" placeholder="E-mail" required />
-          <input className="form-input" name="phone" inputMode="numeric" placeholder="Telefone" required />
-          <input className="form-input uppercase" name="adminCode" inputMode="text" pattern="[A-Za-z][0-9]{3}" placeholder="Codigo do ADM. Ex: A001" defaultValue={adminCode} required />
-          <input className="form-input" name="password" type="password" placeholder="Senha" required />
-          <input className="form-input" name="confirmPassword" type="password" placeholder="Confirmar senha" required />
-          <label className="flex gap-3 text-sm text-zinc-300">
-            <input name="termsAccepted" type="checkbox" required /> Aceito os Termos de Uso.
-          </label>
-          <label className="flex gap-3 text-sm text-zinc-300">
-            <input name="privacyAccepted" type="checkbox" required /> Aceito a Politica de Privacidade.
-          </label>
-          <button className="btn-primary w-full" type="submit">
-            Criar conta
-          </button>
-        </form>
+        <SignupForm defaultAdminCode={adminCode} />
       </AuthCard>
     </>
   );

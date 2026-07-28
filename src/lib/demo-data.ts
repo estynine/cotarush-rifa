@@ -29,6 +29,8 @@ export const demoAdminTenants: AdminTenant[] = [
 export const demoSocialLinks: SocialLinks = {
   whatsappGroup: "https://wa.me/5500000000000",
   whatsappSupport: "https://wa.me/5500000000000",
+  supportEnabled: true,
+  supportLabel: "Suporte via WhatsApp",
   instagram: "https://instagram.com/cotarush",
   tiktok: "https://tiktok.com/@cotarush",
   youtube: "https://youtube.com/@cotarush",

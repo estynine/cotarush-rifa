@@ -25,6 +25,14 @@ export default async function LoginPage({
             Entrar
           </button>
         </form>
+        <form className="mt-3" action="/api/auth/demo" method="post">
+          <input type="hidden" name="role" value="participant" />
+          <input type="hidden" name="adminCode" value="A001" />
+          <input type="hidden" name="returnTo" value="/adm/A001/setup-gamer-dos-sonhos" />
+          <button className="btn-secondary w-full" type="submit">
+            Entrar demo participante
+          </button>
+        </form>
         <div className="mt-4 flex flex-wrap gap-3 text-sm text-zinc-400">
           <Link href="/cadastro" className="text-cyan-200">
             Criar conta

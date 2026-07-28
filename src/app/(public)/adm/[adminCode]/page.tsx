@@ -26,7 +26,9 @@ export default async function AdminPublicLinkPage({
         {campaigns.length === 0 ? (
           <p className="empty-state">Este ADM ainda nao possui campanhas ativas.</p>
         ) : (
-          campaigns.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />)
+          campaigns.map((campaign) => (
+            <CampaignCard key={campaign.id} campaign={campaign} href={`/adm/${tenant.inviteCode}/${campaign.slug}`} />
+          ))
         )}
       </div>
     </section>

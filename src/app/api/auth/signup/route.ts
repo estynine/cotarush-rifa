@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { demoAdminTenants } from "@/lib/demo-data";
 import { proxyToBackend } from "@/lib/backend-proxy";
+import { buildPublicName } from "@/lib/names";
 import { getServerSupabase, getServiceSupabase, hasSupabaseEnv } from "@/lib/supabase";
 import { signUpSchema } from "@/lib/validations";
 
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const input = signUpSchema.parse({
       fullName: safeString(formData.get("fullName")),
-      publicName: safeString(formData.get("publicName")),
+      publicName: safeString(formData.get("publicName")) || buildPublicName(safeString(formData.get("fullName"))),
       email: safeString(formData.get("email")),
       phone: safeString(formData.get("phone")),
       adminCode: safeString(formData.get("adminCode")),

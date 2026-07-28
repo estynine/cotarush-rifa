@@ -15,6 +15,8 @@ export function AccountShell({
   children,
   socialLinks,
 }: Readonly<{ children: React.ReactNode; socialLinks?: SocialLinks }>) {
+  const supportUrl = socialLinks?.supportEnabled === false ? undefined : socialLinks?.whatsappSupport;
+
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.14),transparent_30%),linear-gradient(180deg,#050507,#0b0b12_45%,#050507)]" />
@@ -35,22 +37,26 @@ export function AccountShell({
                 {item.label}
               </Link>
             ))}
-            <a className="nav-link shrink-0" href={socialLinks?.whatsappSupport ?? "/conta"} target={socialLinks?.whatsappSupport ? "_blank" : undefined}>
-              Suporte
-            </a>
+            {supportUrl ? (
+              <a className="nav-link shrink-0" href={supportUrl} target="_blank" rel="noreferrer noopener">
+                Suporte
+              </a>
+            ) : null}
           </nav>
         </div>
       </header>
       <main className="mx-auto max-w-xl">{children}</main>
-      <a
-        className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400 px-4 py-3 text-sm font-black text-emerald-950 shadow-[0_0_35px_rgba(52,211,153,0.35)]"
-        href={socialLinks?.whatsappSupport ?? "/conta"}
-        target={socialLinks?.whatsappSupport ? "_blank" : undefined}
-        rel={socialLinks?.whatsappSupport ? "noreferrer noopener" : undefined}
-      >
-        <LifeBuoy size={18} />
-        Suporte
-      </a>
+      {supportUrl ? (
+        <a
+          className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-400 px-4 py-3 text-sm font-black text-emerald-950 shadow-[0_0_35px_rgba(52,211,153,0.35)]"
+          href={supportUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <LifeBuoy size={18} />
+          {socialLinks?.supportLabel ?? "Suporte"}
+        </a>
+      ) : null}
     </div>
   );
 }

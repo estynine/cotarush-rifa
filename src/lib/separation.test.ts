@@ -50,6 +50,50 @@ describe("separacao visual e imports", () => {
     expect(login).not.toMatch(/Entrar como ADM|Entrar no painel|Painel do ADM/i);
     expect(login).toContain('href="/admin/login"');
   });
+
+  it("login administrativo possui voltar e entrada demo separada", () => {
+    const adminLogin = read("src/app/admin/login/page.tsx");
+    expect(adminLogin).toContain('href="/login"');
+    expect(adminLogin).toContain('action="/api/auth/demo"');
+    expect(adminLogin).toContain('value="admin"');
+  });
+
+  it("cadastro gera nome publico automaticamente e mantem demo participante", () => {
+    const signupForm = read("src/components/public/signup-form.tsx");
+    const signupRoute = read("src/app/api/auth/signup/route.ts");
+    expect(signupForm).toContain("buildPublicName(fullName)");
+    expect(signupForm).toContain('name="publicName"');
+    expect(signupForm).toContain('action="/api/auth/demo"');
+    expect(signupRoute).toContain("buildPublicName");
+  });
+
+  it("campanhas publicas usam link especifico por adm e campanha", () => {
+    const adminPublicPage = read("src/app/(public)/adm/[adminCode]/page.tsx");
+    const tenantCampaignPage = read("src/app/(public)/adm/[adminCode]/[campaignSlug]/page.tsx");
+    const campaignsPage = read("src/app/(public)/campanhas/page.tsx");
+    const campaignCard = read("src/components/public/campaign.tsx");
+
+    expect(adminPublicPage).toContain("/adm/${tenant.inviteCode}/${campaign.slug}");
+    expect(campaignsPage).toContain("/adm/${tenant.inviteCode}/${campaign.slug}");
+    expect(tenantCampaignPage).toContain("campaign.ownerAdminId !== tenant.id");
+    expect(campaignCard).toContain("href?: string");
+  });
+
+  it("suporte so aparece quando habilitado e possui numero configurado", () => {
+    const publicShell = read("src/components/public/shell.tsx");
+    const accountShell = read("src/components/account/shell.tsx");
+    const settingsPage = read("src/app/admin/(panel)/configuracoes/page.tsx");
+    const supportApi = read("src/app/api/admin/settings/support/route.ts");
+    const migration = read("supabase/migrations/20260727203000_admin_support_settings.sql");
+
+    expect(publicShell).toContain("supportEnabled === false");
+    expect(publicShell).toContain("if (!url) return null");
+    expect(accountShell).toContain("supportUrl ? (");
+    expect(settingsPage).toContain("Desativar suporte");
+    expect(supportApi).toContain("support_settings");
+    expect(migration).toContain("enabled boolean");
+    expect(migration).toContain("admins manage scoped support settings");
+  });
 });
 
 describe("permissoes server-side", () => {

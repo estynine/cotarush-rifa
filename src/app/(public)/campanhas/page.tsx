@@ -17,7 +17,9 @@ export default async function CampaignsPage({
         <div className="mt-6 grid gap-5">
           {!tenant ? (
             <div className="panel p-5">
-              <p className="text-sm leading-6 text-zinc-300">Para participar, entre pelo link do ADM ou crie sua conta com o codigo dele.</p>
+              <p className="text-sm leading-6 text-zinc-300">
+                Crie sua conta e use o codigo do ADM para aparecer a campanha e o premio disponivel.
+              </p>
               <Link className="btn-primary mt-4 w-full" href="/cadastro">
                 Criar conta
               </Link>
@@ -25,7 +27,9 @@ export default async function CampaignsPage({
           ) : campaigns.length === 0 ? (
             <p className="empty-state">Este ADM ainda nao possui campanhas ativas.</p>
           ) : (
-            campaigns.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />)
+            campaigns.map((campaign) => (
+              <CampaignCard key={campaign.id} campaign={campaign} href={`/adm/${tenant.inviteCode}/${campaign.slug}`} />
+            ))
           )}
         </div>
       </section>

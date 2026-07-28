@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,16 @@ export default async function AdminLoginPage({
             Entrar no painel
           </button>
         </form>
+        <form className="mt-3" action="/api/auth/demo" method="post">
+          <input type="hidden" name="role" value="admin" />
+          <input type="hidden" name="returnTo" value="/admin" />
+          <button className="btn-secondary w-full" type="submit">
+            Entrar demo ADM
+          </button>
+        </form>
+        <Link className="btn-secondary mt-3 w-full" href="/login">
+          Voltar
+        </Link>
       </section>
     </main>
   );

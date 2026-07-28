@@ -19,6 +19,7 @@ export default async function CampaignDetailPage({ params }: Readonly<{ params: 
   const { slug } = await params;
   const campaign = findCampaignBySlug(slug);
   if (!campaign) notFound();
+  const campaignPrizes = demoInstantPrizes.filter((prize) => prize.campaignId === campaign.id);
 
   return (
     <>
@@ -26,7 +27,7 @@ export default async function CampaignDetailPage({ params }: Readonly<{ params: 
         <DailyNumberExtremes campaign={campaign} extremes={demoDailyExtremes} compact />
         <CampaignMobileHero campaign={campaign} />
         <CampaignPurchasePanel campaign={campaign} />
-        <FoundPrizes prizes={demoInstantPrizes} />
+        <FoundPrizes prizes={campaignPrizes} />
         <div className="grid gap-4">
           <DailyBuyerRanking entries={demoDailyRanking} />
           <CampaignTopTen entries={demoCampaignTopTen} />

@@ -161,6 +161,8 @@ export type DailyExtremes = {
 export type SocialLinks = {
   whatsappGroup?: string;
   whatsappSupport?: string;
+  supportEnabled?: boolean;
+  supportLabel?: string;
   instagram?: string;
   tiktok?: string;
   youtube?: string;
