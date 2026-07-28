@@ -31,8 +31,6 @@ const items = [
   { href: "/admin/rankings", label: "Menor e maior do dia", icon: Gift },
   { href: "/admin/rankings", label: "Ranking diario", icon: BarChart3 },
   { href: "/admin/rankings", label: "Top 10", icon: Crown },
-  { href: "/admin/configuracoes", label: "Redes sociais", icon: Megaphone },
-  { href: "/admin/configuracoes", label: "Suporte", icon: Shield },
   { href: "/admin/configuracoes", label: "Configuracoes", icon: Settings },
   { href: "/admin/auditoria", label: "Auditoria", icon: Shield },
 ];

@@ -165,7 +165,6 @@ export function AuditHistory() {
       {[
         "ativacao de numero premiado",
         "mudanca de preco da campanha",
-        "pagamento de premio pendente",
       ].map((action, index) => (
         <div key={action} className="panel p-4">
           <p className="font-bold text-white">AUD-{index + 1}</p>
