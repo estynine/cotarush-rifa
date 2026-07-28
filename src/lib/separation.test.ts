@@ -147,22 +147,33 @@ describe("retomada de compra", () => {
 });
 
 describe("controle de premios instantaneos", () => {
-  it("painel admin possui regra de liberacao e bloqueio apos encontrado", () => {
+  it("painel admin cria e edita numeros premiados manualmente", () => {
     const adminComponents = read("src/components/admin/admin.tsx");
     const prizeControls = read("src/components/admin/instant-prize-controls.tsx");
     const instantPrizeApi = read("src/app/api/admin/instant-prizes/route.ts");
     const migration = read("supabase/migrations/20260727134000_instant_prize_release_controls.sql");
+    const manualMigration = read("supabase/migrations/20260727213000_manual_instant_prizes.sql");
+    const demoData = read("src/lib/demo-data.ts");
 
-    expect(prizeControls).toContain("Controle de liberacao dos premios");
+    expect(prizeControls).toContain("Adicionar numero premiado");
+    expect(prizeControls).toContain("Nenhum numero premiado cadastrado ainda");
+    expect(prizeControls).toContain("Editar");
+    expect(prizeControls).toContain("Percentual vendido");
+    expect(prizeControls).toContain("Cotas esgotadas");
     expect(prizeControls).toContain("Encontrado e travado");
-    expect(prizeControls).toContain("Acoes em lote");
-    expect(prizeControls).toContain("Regra de caixa");
+    expect(prizeControls).toContain("/api/admin/instant-prizes");
     expect(instantPrizeApi).toContain("requireAdmin");
+    expect(instantPrizeApi).toContain("export async function POST");
+    expect(instantPrizeApi).toContain("instant_prize.create");
     expect(instantPrizeApi).toContain("instant_prize.batch_update");
     expect(adminComponents).toContain("ConfirmActionDialog");
+    expect(demoData).toContain("export const demoInstantPrizes: InstantPrize[] = []");
     expect(migration).toContain("instant_prize_found_locked");
     expect(migration).toContain("prevent_found_instant_prize_delete_trigger");
     expect(migration).toContain("instant_prizes_release_controls_valid");
+    expect(manualMigration).toContain("instant_prize_is_released");
+    expect(manualMigration).toContain("release_threshold_percent");
+    expect(manualMigration).toContain("public.instant_prize_is_released(ip, v_campaign, v_projected_numbers) = false");
   });
 });
 

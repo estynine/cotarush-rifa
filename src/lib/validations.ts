@@ -119,6 +119,31 @@ export const instantPrizeBatchControlSchema = instantPrizeControlBaseSchema
     message: "Informe pelo menos uma alteracao em lote.",
   });
 
+export const instantPrizeCreateSchema = instantPrizeControlBaseSchema
+  .safeExtend({
+    campaignId: z.uuid(),
+    number: z.coerce.number().int().min(0).max(999999),
+    title: z.string().trim().min(3).max(120),
+    description: z.string().trim().min(3).max(240),
+    prizeType: z.enum(["money", "product", "extra_numbers", "credit", "other"]).default("money"),
+    active: z.boolean().default(false),
+    valueCents: z.number().int().nonnegative().nullable().optional(),
+    extraNumbers: z.number().int().positive().nullable().optional(),
+    payoutReserveCents: z.number().int().nonnegative().default(0),
+    releaseRule: instantPrizeReleaseRuleSchema.default("manual"),
+    publicRuleLabel: z.string().trim().min(3).max(180).default("Liberado pela administracao da campanha"),
+    reason: z.string().trim().min(3).max(400).default("criacao de numero premiado"),
+  })
+  .superRefine((data, context) => {
+    if (data.releaseRule === "after_percent_sold" && data.releaseThresholdPercent == null) {
+      context.addIssue({ code: "custom", message: "Informe o percentual vendido.", path: ["releaseThresholdPercent"] });
+    }
+
+    if (data.releaseRule === "after_revenue" && data.releaseThresholdCents == null) {
+      context.addIssue({ code: "custom", message: "Informe o caixa minimo.", path: ["releaseThresholdCents"] });
+    }
+  });
+
 export function validateQuantityAgainstCampaign(quantity: number, maxPerOrder: number): void {
   if (!Number.isSafeInteger(quantity) || quantity <= 0) {
     throw new RangeError("Quantidade invalida.");
